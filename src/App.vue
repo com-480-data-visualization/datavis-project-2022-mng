@@ -33,7 +33,7 @@
         <v-divider></v-divider>
 
         <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} — <strong>Data visualisation - EPFL</strong><v-btn class="white--text" icon href="https://github.com/epfl-ada/ada-2021-project-mmng"><v-icon size="24px">mdi-github</v-icon></v-btn>
+          {{ new Date().getFullYear() }} — <strong>Data visualization - EPFL</strong><v-btn class="white--text" icon href="https://github.com/epfl-ada/ada-2021-project-mmng"><v-icon size="24px">mdi-github</v-icon></v-btn>
         </v-card-text>
       </v-card>
     </v-footer>
