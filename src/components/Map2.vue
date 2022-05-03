@@ -8,18 +8,21 @@
         <li>slug: {{currentProvince.slug}}</li>
       </ul>
     </div>
-    <svg></svg>
+    <svg id="Graph svg"></svg>
   </div>
 </template>
 
 <script>
 import * as d3 from 'd3'
+import bbox from "@turf/bbox";
+import json from '../data/cantons.json';
 export default {
   name: "Map2",
   data() {
     return {
       province: undefined,
       currentProvince: undefined,
+      geoJsonObj: json,
     }
   },
   methods: {
@@ -36,29 +39,38 @@ export default {
   created() {
     // Set svg width & height
     let centered = undefined;
-    const mapCenter = {
-      lat: 1.4,
-      lng: 117.5
-    };
     const size = {
       height: 700,
-      width: d3.select('.map-wrapper').node().getBoundingClientRect().width,
+      width: 700,
     };
+    const width=1000
+    const [minX, minY, maxX, maxY] = bbox(this.geoJsonObj);
 
-    const color = d3.scale.linear()
+    // calculate aspect ratio and derive height
+    const height = ((maxY - minY) / (maxX - minX)) * width;
+
+    const x = d3.scaleLinear()
+        .range([0, width])
+        .domain([minX, maxX]);
+
+    const y = d3.scaleLinear()
+        .range([0, height])
+        .domain([maxY, minY]);
+
+    const color = d3.scaleLinear()
         .domain([1, 20])
         .clamp(true)
         .range(['#08304b', '#08304b']);
 
-    const projection = d3.geo.equirectangular()
-        .scale(1400)
-        .center([mapCenter.lng, mapCenter.lat])
-        .translate([size.width / 2, size.height / 2]);
+    const projection = d3.geoTransform({
+      point: function(px, py) {
+        this.stream.point(x(px), y(py));
+      },
+    });
 
-    const path = d3.geo.path()
-        .projection(projection);
+    const path = d3.geoPath().projection(projection);
 
-    const svg = d3.select('svg')
+    const svg = d3.select("#Graph svg").append("svg")
         .attr('width', size.width)
         .attr('height', size.height);
 
@@ -69,20 +81,15 @@ export default {
         .attr('height', size.height)
         .on('click', clicked);
 
-    const g = svg.append('g');
-    const mapLayer = g.append('g')
-        .classed('map-layer', true);
 
 // Load map data
-    const geoJsonUrl = '..data/cantons.json';
-    d3.json(geoJsonUrl, function(error, mapData) {
-      var features = mapData.features;
+      var features = this.geoJsonObj.features;
 
       // Update color scale domain based on data
       color.domain([0, d3.max(features, nameLength)]);
 
       // Draw each province as a path
-      mapLayer.selectAll('path')
+    svg.append('g').selectAll('path')
           .data(features)
           .enter().append('path')
           .attr('d', path)
@@ -91,7 +98,6 @@ export default {
           .on('mouseover', mouseover)
           .on('mouseout', mouseout)
           .on('click', clicked);
-    });
 
 function clicked(d) {
   var x, y, k;
@@ -113,13 +119,13 @@ function clicked(d) {
   }
 
   // Highlight the clicked province
-  mapLayer.selectAll('path')
+  svg.append('g').selectAll('path')
       .style('fill', function(d){
         return centered && d===centered ? '#D5708B' : fillFn(d);
       });
 
   // Zoom
-  g.transition()
+  svg.append('g').transition()
       .duration(750)
       .attr('transform', 'translate(' + size.width / 2 + ',' + size.height / 2 + ')scale(' + k + ')translate(' + -x + ',' + -y + ')');
 }
@@ -135,7 +141,7 @@ function mouseover(d){
 function mouseout(){
   this.selectProvince(undefined);
   // Reset province color
-  mapLayer.selectAll('path')
+  svg.append('g').selectAll('path')
       .style('fill', (d) => {
         return centered && d===centered ? '#D5708B' : fillFn(d);
       });
