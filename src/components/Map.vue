@@ -79,18 +79,23 @@ export default {
           .attr('height',height);
       const that = this;
 
+     // const groupData = [this.geoJsonObj, this.communes];
       svg.append("g")
           .selectAll("path")
           .data(this.geoJsonObj.features)
           .enter()
           .append("path")
-          .attr("class", "feature")
+          .attr("class", "canton")
           .style("fill", "steelblue")
           .attr("d", path)
+          .attr("id", function(d, i) {
+            console.log(i)
+            return "canton" + d.properties.canton_number
+          })
           .on("mouseover",function (e,d){
             // gives me the correct values
             //console.log(d.properties)
-            console.log(d)
+            console.log(d.properties.canton_number)
             d3.select(this).style('fill', '#1483ce');
             that.selectProvince('non definito');
             //that.selectProvince(d.properties)
@@ -108,15 +113,30 @@ export default {
           })
           .on('click', clicked);
 
+      svg.append("g")
+          .selectAll("path")
+          .data(this.communes.features)
+          .enter()
+          .append("path")
+          .attr("class", "communes")
+          .style("fill", "red")
+          .attr("d", path)
+          .attr("id", function(d, i) {
+            console.log(i)
+            return "communes" + d.properties.commune_number +"-" + d.properties.canton_number
+          })
+      //.style("display","none")
+      .attr("hidden",true)
+
       function getMaxCoordinatesFromBorders(d){
         const x_coord = 0
         const y_coord = 1
         var max_x_coord =  d.geometry.coordinates
-                                .map((borders)=> 
+                                .map((borders)=>
                                                   Math.max.apply(
                                                       Math,
                                                       borders
-                                                        .map((border_coordinate) => 
+                                                        .map((border_coordinate) =>
                                                                 Math.max.apply(
                                                                           Math,
                                                                           border_coordinate.map(coordinate => coordinate[x_coord])
@@ -125,11 +145,11 @@ export default {
                                                   )
                                       )
         var max_y_coord =  d.geometry.coordinates
-                                .map((borders)=> 
+                                .map((borders)=>
                                                   Math.max.apply(
                                                       Math,
                                                       borders
-                                                        .map((border_coordinate) => 
+                                                        .map((border_coordinate) =>
                                                                 Math.max.apply(
                                                                           Math,
                                                                           border_coordinate.map(coordinate => coordinate[y_coord])
@@ -144,11 +164,11 @@ export default {
         const x_coord = 0
         const y_coord = 1
         var min_x_coord =  d.geometry.coordinates
-                                .map((borders)=> 
+                                .map((borders)=>
                                                   Math.min.apply(
                                                       Math,
                                                       borders
-                                                        .map((border_coordinate) => 
+                                                        .map((border_coordinate) =>
                                                               Math.min.apply(
                                                                         Math,
                                                                         border_coordinate.map(coordinate => coordinate[x_coord])
@@ -157,11 +177,11 @@ export default {
                                                     )
                                       )
         var min_y_coord =  d.geometry.coordinates
-                                .map((borders)=> 
+                                .map((borders)=>
                                                   Math.min.apply(
                                                       Math,
                                                       borders
-                                                        .map((border_coordinate) => 
+                                                        .map((border_coordinate) =>
                                                                 Math.min.apply(
                                                                           Math,
                                                                           border_coordinate.map(coordinate => coordinate[y_coord])
@@ -169,20 +189,20 @@ export default {
                                                             )
                                                   )
                                       )
-        
+
         return {min_x_coord,min_y_coord}
       }
 
       function getBoundingBox(d){
         console.log('entered_bbox')
-        
+
         let {max_x_coord,max_y_coord} = getMaxCoordinatesFromBorders(d)
         let {min_x_coord,min_y_coord} = getMinCoordinatesFromBorders(d)
         console.log('min_x_coord ' + min_x_coord)
         console.log('min_y_coord ' +  min_y_coord)
         console.log('max_x_coord ' + max_x_coord)
         console.log('max_y_coord ' +max_y_coord)
-        
+
         console.log(minX)
         console.log(minY)
         console.log(maxX)
@@ -208,14 +228,22 @@ export default {
 
 
       function clicked(e,d) {
+        svg.selectAll(".communes").filter(function(d2) {
+              return d.properties.canton_number === d2.properties.canton_number
+            })
+            .attr("hidden",null)
+            .style('fill', '#D5708B')
+
+        this.style.display = "none";
+          //or to hide the all svg
+          //document.getElementById("mySvg").style.display = "none";
         var x, y, k;
-        
+
         let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
-        
+
         console.log(bbox)
         // Compute centroid of the selected path
         if (d && centered !== d) {
-          //TODO: fix this
           var centroid = path.centroid(d);
           x = centroid[0];
           y = centroid[1];
@@ -223,9 +251,9 @@ export default {
           console.log(Math.abs(max_y_coord - min_y_coord))
           var scale_x = Math.ceil(size.width / Math.abs(max_x_coord - min_x_coord))
           var scale_y = Math.ceil(size.height / Math.abs(max_y_coord - min_y_coord))
-          
+
           k =  scale_x < scale_y ? scale_x : scale_y;
-    
+
           centered = d;
           that.openInfo(d.properties);
         } else {
@@ -240,18 +268,21 @@ export default {
         console.log('y: '+ y)
 
         // Highlight the clicked province
-        svg.append('g').selectAll('path')
+        /*svg.append('g').selectAll('path')
+            .data(that.communes.features)
+            .enter()
+            .append("path")
             .style('fill', function(d){
               return centered && d===centered ? '#D5708B' : fillFn(d);
-            });
+            });*/
         // Zoom
         //TODO: needs to be fixed
         //if(!zoomed) {
-          
+
         svg.transition()
             .duration(750)
             .attr('transform', 'scale(' + k + ')' + 'translate(' + size.width / 2 + ',' + size.height / 2  +')translate(' + -x + ',' + -y + ')' );
-          
+
         zoomed = true
         console.log(zoomed)
         //}
