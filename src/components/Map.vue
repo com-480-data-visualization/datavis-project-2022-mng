@@ -78,12 +78,6 @@ export default {
       const svg = d3.select("#chart").append("svg")
           .attr('width',1000)
           .attr('height',1000);
-
-      svg.append('rect')
-          .attr('class', 'background')
-          .attr('width', size.width)
-          .attr('height', size.height)
-          .on('click', clicked);
       const that = this;
 
       svg.append("g")
@@ -117,6 +111,7 @@ export default {
 
         // Compute centroid of the selected path
         if (d && centered !== d) {
+          //TODO: fix this
           var centroid = path.centroid(d);
           x = centroid[0];
           y = centroid[1];
@@ -148,7 +143,7 @@ export default {
         else{
           svg.transition()
               .duration(750)
-              //undefined set it faster
+              //undefined allows for faster zoomed out.
               .attr('transform',0)
           zoomed = false
         }
