@@ -42,7 +42,7 @@ export default {
     createSvg(){
     // get extent of switzerland as x, y coordinates
 
-      var zoomed = false
+    
       const width=1000
       const [minX, minY, maxX, maxY] = bbox(this.geoJsonObj);
 
@@ -62,11 +62,29 @@ export default {
         },
       });
       const path = d3.geoPath().projection(projection);
+      const canton_color = "green" //previously was steelblue
+      const commune_color = "orange" //previously was steelblue
+      const canton_stroke = "black"
+      const commune_stroke = "black"
+      const canton_stroke_width = 1
+      const commune_stroke_width = 1
+      const canton_color_mouse_on = "lightgreen" // previously was: #1483ce
+      const commune_color_mouse_on = "#ffc87c" // previously was: #1483ce
+ 
 
-      const color = d3.scaleLinear()
-          .domain([1, 20])
-          .clamp(true)
-          .range(['#08304b', '#08304b']);
+    
+
+      let zoom_translation_to_map_center = {tx: width / 2,ty:  height / 2,scale:  1}
+      let current_canton_info = {zoom_info: zoom_translation_to_map_center, canton_number: 0, canton_selected: false}
+      
+
+      
+
+     // const color = d3.scaleLinear()
+       //   .domain([1, 20])
+         // .clamp(true)
+          //.range(['green', 'lightgreen']);
+          //.range(['#08304b', '#08304b']);
       let centered = undefined;
       const size = {
         height: height,
@@ -80,13 +98,23 @@ export default {
       const that = this;
 
      // const groupData = [this.geoJsonObj, this.communes];
+      svg
+        .append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", width)
+        .attr("height", height)
+        .on('click', clickedBox);
+
       svg.append("g")
           .selectAll("path")
           .data(this.geoJsonObj.features)
           .enter()
           .append("path")
           .attr("class", "canton")
-          .style("fill", "steelblue")
+          .style("fill", canton_color)
+          .attr("stroke-width", canton_stroke_width)
+          .attr("stroke", canton_stroke)
           .attr("d", path)
           .attr("id", function(d, i) {
             console.log(i)
@@ -96,22 +124,22 @@ export default {
             // gives me the correct values
             //console.log(d.properties)
             console.log(d.properties.canton_number)
-            d3.select(this).style('fill', '#1483ce');
+            this.style.fill =  canton_color_mouse_on;
             that.selectProvince('non definito');
             //that.selectProvince(d.properties)
           })
           .on('mouseout', function () {
             that.selectProvince('non definito');
             // Reset province color
-            svg.selectAll('path')
-                .style('fill', (d) => {
-                  //console.log("ciao")
-                  //console.log(d)
-                  //console.log(centered)
-                  return centered && d===centered ? '#D5708B' : fillFn(d);
-                });
+            this.style.fill = canton_color
+            /*
+            //svg.selectAll('path')
+              //  .style('fill', 'green' /*(d) => {
+                  return centered && d===centered ? canton_color : fillFn(d);
+                  
+                });*/
           })
-          .on('click', clicked);
+          .on('click', clickedCanton);
 
       svg.append("g")
           .selectAll("path")
@@ -119,172 +147,159 @@ export default {
           .enter()
           .append("path")
           .attr("class", "communes")
-          .style("fill", "red")
+          .style("fill", commune_color)
+          .attr("stroke-width", commune_stroke_width)
+          .attr("stroke", commune_stroke)
           .attr("d", path)
           .attr("id", function(d, i) {
             console.log(i)
             return "communes" + d.properties.commune_number +"-" + d.properties.canton_number
           })
-      //.style("display","none")
-      .attr("hidden",true)
+          .attr("hidden",true)
+          .on("mouseover",function (e,d){
+            // gives me the correct values
+            //console.log(d.properties)
+            console.log(d.properties.canton_number)
+            this.style.fill = commune_color_mouse_on;
+            that.selectProvince('non definito');
+            //that.selectProvince(d.properties)
+          })
+          .on('mouseout', function () {
+            that.selectProvince('non definito');
+            // Reset province color
+            this.style.fill = commune_color;
+            /*
+           // svg.selectAll('path')
+             //   .style('fill', commune_color /*(d) => {
+                  return centered && d===centered ? canton_color : fillFn(d);
+                  
+                });*/
+          })
+          .on('click', clickedCommune);
 
-      function getMaxCoordinatesFromBorders(d){
-        const x_coord = 0
-        const y_coord = 1
-        var max_x_coord =  d.geometry.coordinates
-                                .map((borders)=>
-                                                  Math.max.apply(
-                                                      Math,
-                                                      borders
-                                                        .map((border_coordinate) =>
-                                                                Math.max.apply(
-                                                                          Math,
-                                                                          border_coordinate.map(coordinate => coordinate[x_coord])
-                                                                )
-                                                            )
-                                                  )
-                                      )
-        var max_y_coord =  d.geometry.coordinates
-                                .map((borders)=>
-                                                  Math.max.apply(
-                                                      Math,
-                                                      borders
-                                                        .map((border_coordinate) =>
-                                                                Math.max.apply(
-                                                                          Math,
-                                                                          border_coordinate.map(coordinate => coordinate[y_coord])
-                                                                )
-                                                            )
-                                                  )
-                                      )
-        return {max_x_coord,max_y_coord}
-      }
-
-      function getMinCoordinatesFromBorders(d){
-        const x_coord = 0
-        const y_coord = 1
-        var min_x_coord =  d.geometry.coordinates
-                                .map((borders)=>
-                                                  Math.min.apply(
-                                                      Math,
-                                                      borders
-                                                        .map((border_coordinate) =>
-                                                              Math.min.apply(
-                                                                        Math,
-                                                                        border_coordinate.map(coordinate => coordinate[x_coord])
-                                                              )
-                                                            )
-                                                    )
-                                      )
-        var min_y_coord =  d.geometry.coordinates
-                                .map((borders)=>
-                                                  Math.min.apply(
-                                                      Math,
-                                                      borders
-                                                        .map((border_coordinate) =>
-                                                                Math.min.apply(
-                                                                          Math,
-                                                                          border_coordinate.map(coordinate => coordinate[y_coord])
-                                                                )
-                                                            )
-                                                  )
-                                      )
-
-        return {min_x_coord,min_y_coord}
-      }
+     
 
       function getBoundingBox(d){
         console.log('entered_bbox')
-
-        let {max_x_coord,max_y_coord} = getMaxCoordinatesFromBorders(d)
-        let {min_x_coord,min_y_coord} = getMinCoordinatesFromBorders(d)
-        console.log('min_x_coord ' + min_x_coord)
-        console.log('min_y_coord ' +  min_y_coord)
-        console.log('max_x_coord ' + max_x_coord)
-        console.log('max_y_coord ' +max_y_coord)
-
-        console.log(minX)
-        console.log(minY)
-        console.log(maxX)
-        console.log(maxY)
-
+        console.log(d.properties.bbox_max_coord)
+        console.log(d.properties.bbox_min_coord)
+        let [max_x_coord,max_y_coord] = d.properties.bbox_max_coord
+        let [min_x_coord,min_y_coord] = d.properties.bbox_min_coord
+        
+        console.log(max_x_coord)
+        console.log(max_y_coord)
+        console.log(min_x_coord)
+        console.log(min_y_coord)
         max_x_coord = x(max_x_coord) // rescale coordinates
         max_y_coord = y(max_y_coord)// rescale coordinates
         min_x_coord = x(min_x_coord)// rescale coordinates
         min_y_coord = y(min_y_coord)// rescale coordinates
 
-        console.log('min_x_coord ' + min_x_coord)
-        console.log('min_y_coord ' +  min_y_coord)
-        console.log('max_x_coord ' + max_x_coord)
-        console.log('max_y_coord ' +max_y_coord)
-        //var max_x = Math.max(d.geometry.coordinates.forEach((prop)=> Math.min(prop.map((x) => x.map(y => y[0])))));
-        //var max_y = Math.max(d.geometry.coordinates.forEach((prop)=> Math.min(prop.map((x) => x.map(y => y[1])))));
-        //var min_x = Math.min(d.geometry.coordinates.forEach((prop)=> Math.min(prop.map((x) => x.map(y => y[0])))));
-        //var min_y = Math.min(d.geometry.coordinates.forEach((prop)=> Math.min(prop.map((x) => x.map(y => y[1])))));
-        //console.log('max: ' + max_x + ',' + max_y)
-        //console.log('min: ' + min_x + ',' + min_y)
         return {max_x_coord,max_y_coord,min_x_coord,min_y_coord}
       }
 
+      function force_zoom_to_center(){
+        var x ,  y,  k
+     
+        x = zoom_translation_to_map_center.tx;
+        y = zoom_translation_to_map_center.ty;
+        k = zoom_translation_to_map_center.scale;
+        svg.transition()
+          .duration(750)
+          .attr('transform', 'scale(' + k + ')' + 'translate(' + size.width / 2 + ',' + size.height / 2  +')translate(' + -x + ',' + -y + ')' );
+      }
 
-      function clicked(e,d) {
-        svg.selectAll(".communes").filter(function(d2) {
-              return d.properties.canton_number === d2.properties.canton_number
-            })
-            .attr("hidden",null)
-            .style('fill', '#D5708B')
-
-        this.style.display = "none";
-          //or to hide the all svg
-          //document.getElementById("mySvg").style.display = "none";
+      function zoom_to_region(d, default_zoom_and_translation,canton_zoom = true){
         var x, y, k;
 
         let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
 
-        console.log(bbox)
+       
         // Compute centroid of the selected path
         if (d && centered !== d) {
           var centroid = path.centroid(d);
           x = centroid[0];
           y = centroid[1];
-          console.log(Math.abs(max_x_coord - min_x_coord))
-          console.log(Math.abs(max_y_coord - min_y_coord))
-          var scale_x = Math.ceil(size.width / Math.abs(max_x_coord - min_x_coord))
-          var scale_y = Math.ceil(size.height / Math.abs(max_y_coord - min_y_coord))
+          
+          var scale_x = size.width / Math.abs(max_x_coord - min_x_coord)
+          var scale_y = size.height / Math.abs(max_y_coord - min_y_coord)
 
           k =  scale_x < scale_y ? scale_x : scale_y;
+          k = k - 0.2
 
+          if (canton_zoom){
+            current_canton_info.zoom_info = {tx: x, ty:y, scale: k}
+          }
           centered = d;
           that.openInfo(d.properties);
         } else {
-          x = size.width / 2;
-          y = size.height / 2;
-          k = 1;
+          x = default_zoom_and_translation.tx;
+          y = default_zoom_and_translation.ty;
+          k = default_zoom_and_translation.scale;
           centered = null;
           that.closeInfo();
         }
 
-        console.log('x: '+ x)
-        console.log('y: '+ y)
-
-        // Highlight the clicked province
-        /*svg.append('g').selectAll('path')
-            .data(that.communes.features)
-            .enter()
-            .append("path")
-            .style('fill', function(d){
-              return centered && d===centered ? '#D5708B' : fillFn(d);
-            });*/
-        // Zoom
-        //TODO: needs to be fixed
-        //if(!zoomed) {
-
         svg.transition()
             .duration(750)
             .attr('transform', 'scale(' + k + ')' + 'translate(' + size.width / 2 + ',' + size.height / 2  +')translate(' + -x + ',' + -y + ')' );
+      }
 
-        zoomed = true
-        console.log(zoomed)
+
+      function clickedBox(e,d){
+        console.log(d)
+        svg.selectAll(".communes")
+              .attr("hidden",true)
+        svg.selectAll(".cantons")
+              .attr("hidden",null)
+        force_zoom_to_center()
+        current_canton_info.canton_selected = false
+      }
+      function clickedCommune(e,d){
+       
+       
+        
+        zoom_to_region(d,current_canton_info.zoom_info, false)
+      }
+
+      function clickedCanton(e,d) {
+        if(! current_canton_info.canton_selected){
+          svg.selectAll(".communes")
+              .attr("hidden",true)
+
+          svg.selectAll(".communes").filter(function(d2) {
+                return d.properties.canton_number === d2.properties.canton_number
+              })
+              .attr("hidden",null)
+            
+          svg.selectAll(".cantons")
+              .attr("hidden",null)
+
+          svg.selectAll(".cantons").filter(function(d2) {
+                return d.properties.canton_number === d2.properties.canton_number
+              })
+              .attr("hidden",true)
+            
+
+          //this.style.display = "none";
+          current_canton_info.canton_selected = true
+          
+          zoom_to_region(d,zoom_translation_to_map_center,true)
+        }
+        else{
+          svg.selectAll(".communes")
+              .attr("hidden",true)
+          svg.selectAll(".cantons")
+              .attr("hidden",null)
+          force_zoom_to_center()
+          current_canton_info.canton_selected = false
+        }
+
+          //or to hide the all svg
+          //document.getElementById("mySvg").style.display = "none";
+        
+
+        
         //}
         /*
         else{
@@ -297,6 +312,7 @@ export default {
 */
       }
 
+/*
 // Get province name length
       function nameLength(d){
         const n = nameFn(d);
@@ -312,6 +328,7 @@ export default {
       function fillFn(d){
         return color(nameLength(d));
       }
+      */
     },
   },
   mounted(){
