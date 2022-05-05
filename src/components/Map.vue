@@ -30,7 +30,6 @@ import * as d3 from 'd3'
 import json from '../data/cantons.json';
 import json2 from '../data/communes.json';
 import Pie from "./Pie";
-import canton_energy from "../data/energyreporter_canton_historized.csv"
 export default {
   name: "Map",
   components: {
@@ -40,7 +39,6 @@ export default {
     return {
       Taiwan,
       geoJsonObj: json,
-      energy_canton: canton_energy,
       communes: json2,
       province: {name: 'Switzerland'},
       currentProvince: {name: 'Switzerland'},
@@ -342,7 +340,6 @@ export default {
   },
   mounted(){
     this.createSvg();
-    this.createScatterPlot();
   }
 }
 </script>
