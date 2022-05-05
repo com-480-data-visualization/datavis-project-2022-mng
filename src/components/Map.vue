@@ -56,12 +56,15 @@ export default {
     // get extent of switzerland as x, y coordinates
 
 
-      const width=1000
+      const width=750
       const [minX, minY, maxX, maxY] = bbox(this.geoJsonObj);
 
       // calculate aspect ratio and derive height
       const height = ((maxY - minY) / (maxX - minX)) * width;
 
+
+      document.getElementById('chart').style.width = width+"px";
+      document.getElementById('chart').style.height = height+"px";
       const x = d3.scaleLinear()
           .range([0, width])
           .domain([minX, maxX]);
@@ -192,24 +195,7 @@ export default {
 
 
 
-      function getBoundingBox(d){
-        console.log('entered_bbox')
-        console.log(d.properties.bbox_max_coord)
-        console.log(d.properties.bbox_min_coord)
-        let [max_x_coord,max_y_coord] = d.properties.bbox_max_coord
-        let [min_x_coord,min_y_coord] = d.properties.bbox_min_coord
 
-        console.log(max_x_coord)
-        console.log(max_y_coord)
-        console.log(min_x_coord)
-        console.log(min_y_coord)
-        max_x_coord = x(max_x_coord) // rescale coordinates
-        max_y_coord = y(max_y_coord)// rescale coordinates
-        min_x_coord = x(min_x_coord)// rescale coordinates
-        min_y_coord = y(min_y_coord)// rescale coordinates
-
-        return {max_x_coord,max_y_coord,min_x_coord,min_y_coord}
-      }
 
       function force_zoom_to_center(){
         var x ,  y,  k
@@ -225,8 +211,8 @@ export default {
       function zoom_to_region(d, default_zoom_and_translation,canton_zoom = true){
         var x, y, k;
 
-        let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
-
+        //let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
+        let [[min_x_coord,min_y_coord],[max_x_coord,max_y_coord]] = path.bounds(d)
 
         // Compute centroid of the selected path
         if (d && centered !== d) {
@@ -234,11 +220,12 @@ export default {
           x = centroid[0];
           y = centroid[1];
 
+
           var scale_x = size.width / Math.abs(max_x_coord - min_x_coord)
           var scale_y = size.height / Math.abs(max_y_coord - min_y_coord)
 
           k =  scale_x < scale_y ? scale_x : scale_y;
-          k = k - 0.2
+          k = k - 0.5
 
           if (canton_zoom){
             current_canton_info.zoom_info = {tx: x, ty:y, scale: k}
@@ -253,9 +240,10 @@ export default {
           that.closeInfo();
         }
 
-        svg.selectAll("path").transition()
+        svg.transition()
             .duration(750)
-            .attr('transform', 'translate(' + size.width / 2 + ',' + size.height / 2  +')translate(' + -x + ',' + -y + ')' + 'scale(' + k + ')');
+            .attr('transform',  'scale(' + k + ')'+'translate(' + size.width / 2 + ',' + size.height / 2  +')translate(' + -x + ',' + -y + ')' );
+
       }
 
 
@@ -355,11 +343,13 @@ export default {
   text-align: center;
   column-gap: 40px;
   width: 1000px;
-  height: 800px;/* or whatever width you want. */
+  height: 1000px;
   max-width: 1000px; /* or whatever width you want. */
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden;
 }
+
 .province-info {
   background: #F5F5F7;
   padding: 10px;
