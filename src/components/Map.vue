@@ -3,7 +3,6 @@
     <div class="center-screen">
       <div
           id='chart' >
-
       </div>
       <div v-if="currentProvince" class="province-info">
         <h3 class="text-center">{{currentProvince.state}}</h3>
