@@ -1,6 +1,13 @@
 <template>
   <div>
   <h2 v-if="province" class="province-title">{{province.name}}</h2>
+    <div v-if="currentProvince" class="province-info">
+      <h3 class="text-center">{{currentProvince.state}}</h3>
+      <ul>
+        <li>cartodb_id: {{currentProvince.cartodb_id}}</li>
+        <li>slug: {{currentProvince.slug}}</li>
+      </ul>
+    </div>
     <div class="center-screen" id='chart' ></div>
   </div>
  <!-- <svg-map :map="Taiwan"></svg-map> -->
@@ -24,7 +31,7 @@ export default {
       geoJsonObj: json,
       communes: json2,
       province: 'non definito',
-      currentProvince: 'non definito',
+      currentProvince: undefined,
     };
   },
   created() {
@@ -42,7 +49,7 @@ export default {
     createSvg(){
     // get extent of switzerland as x, y coordinates
 
-    
+
       const width=1000
       const [minX, minY, maxX, maxY] = bbox(this.geoJsonObj);
 
@@ -70,15 +77,15 @@ export default {
       const commune_stroke_width = 1
       const canton_color_mouse_on = "lightgreen" // previously was: #1483ce
       const commune_color_mouse_on = "#ffc87c" // previously was: #1483ce
- 
 
-    
+
+
 
       let zoom_translation_to_map_center = {tx: width / 2,ty:  height / 2,scale:  1}
       let current_canton_info = {zoom_info: zoom_translation_to_map_center, canton_number: 0, canton_selected: false}
-      
 
-      
+
+
 
      // const color = d3.scaleLinear()
        //   .domain([1, 20])
@@ -111,7 +118,7 @@ export default {
           .data(this.geoJsonObj.features)
           .enter()
           .append("path")
-          .attr("class", "canton")
+          .attr("class", "cantons")
           .style("fill", canton_color)
           .attr("stroke-width", canton_stroke_width)
           .attr("stroke", canton_stroke)
@@ -136,7 +143,7 @@ export default {
             //svg.selectAll('path')
               //  .style('fill', 'green' /*(d) => {
                   return centered && d===centered ? canton_color : fillFn(d);
-                  
+
                 });*/
           })
           .on('click', clickedCanton);
@@ -172,12 +179,12 @@ export default {
            // svg.selectAll('path')
              //   .style('fill', commune_color /*(d) => {
                   return centered && d===centered ? canton_color : fillFn(d);
-                  
+
                 });*/
           })
           .on('click', clickedCommune);
 
-     
+
 
       function getBoundingBox(d){
         console.log('entered_bbox')
@@ -185,7 +192,7 @@ export default {
         console.log(d.properties.bbox_min_coord)
         let [max_x_coord,max_y_coord] = d.properties.bbox_max_coord
         let [min_x_coord,min_y_coord] = d.properties.bbox_min_coord
-        
+
         console.log(max_x_coord)
         console.log(max_y_coord)
         console.log(min_x_coord)
@@ -200,7 +207,7 @@ export default {
 
       function force_zoom_to_center(){
         var x ,  y,  k
-     
+
         x = zoom_translation_to_map_center.tx;
         y = zoom_translation_to_map_center.ty;
         k = zoom_translation_to_map_center.scale;
@@ -214,13 +221,13 @@ export default {
 
         let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
 
-       
+
         // Compute centroid of the selected path
         if (d && centered !== d) {
           var centroid = path.centroid(d);
           x = centroid[0];
           y = centroid[1];
-          
+
           var scale_x = size.width / Math.abs(max_x_coord - min_x_coord)
           var scale_y = size.height / Math.abs(max_y_coord - min_y_coord)
 
@@ -240,9 +247,9 @@ export default {
           that.closeInfo();
         }
 
-        svg.transition()
+        svg.selectAll("path").transition()
             .duration(750)
-            .attr('transform', 'scale(' + k + ')' + 'translate(' + size.width / 2 + ',' + size.height / 2  +')translate(' + -x + ',' + -y + ')' );
+            .attr('transform', 'translate(' + size.width / 2 + ',' + size.height / 2  +')translate(' + -x + ',' + -y + ')' + 'scale(' + k + ')');
       }
 
 
@@ -256,9 +263,6 @@ export default {
         current_canton_info.canton_selected = false
       }
       function clickedCommune(e,d){
-       
-       
-        
         zoom_to_region(d,current_canton_info.zoom_info, false)
       }
 
@@ -271,7 +275,7 @@ export default {
                 return d.properties.canton_number === d2.properties.canton_number
               })
               .attr("hidden",null)
-            
+
           svg.selectAll(".cantons")
               .attr("hidden",null)
 
@@ -279,11 +283,11 @@ export default {
                 return d.properties.canton_number === d2.properties.canton_number
               })
               .attr("hidden",true)
-            
+
 
           //this.style.display = "none";
           current_canton_info.canton_selected = true
-          
+
           zoom_to_region(d,zoom_translation_to_map_center,true)
         }
         else{
@@ -297,9 +301,9 @@ export default {
 
           //or to hide the all svg
           //document.getElementById("mySvg").style.display = "none";
-        
 
-        
+
+
         //}
         /*
         else{
@@ -343,6 +347,18 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 100vh;
+  width: 1000px;
+  height: 1000px;/* or whatever width you want. */
+  max-width: 1000px; /* or whatever width you want. */
+  margin-left: auto;
+  margin-right: auto;
+}
+.province-info {
+  background: blue;
+  position: absolute;
+  top: 150px;
+  right: 20px;
+  height: 400px;
+  width: 300px;
 }
 </style>
