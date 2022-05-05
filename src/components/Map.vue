@@ -1,7 +1,10 @@
+
+   
 <template>
   <div>
-    <div class="center-screen">
+    <div class="center-screen" id="main-div">
       <div
+          class="map-div"
           id='chart' >
       </div>
       <div v-if="currentProvince" class="province-info">
@@ -13,6 +16,8 @@
         <Pie class="pie-info"/>
       </div>
     </div>
+    <div class="center-screen" id="time_series"></div>
+     <div class="center-screen" ></div>
   </div>
  <!-- <svg-map :map="Taiwan"></svg-map> -->
 </template>
@@ -25,6 +30,7 @@ import * as d3 from 'd3'
 import json from '../data/cantons.json';
 import json2 from '../data/communes.json';
 import Pie from "./Pie";
+import canton_energy from "../data/energyreporter_canton_historized.csv"
 export default {
   name: "Map",
   components: {
@@ -34,9 +40,10 @@ export default {
     return {
       Taiwan,
       geoJsonObj: json,
+      energy_canton: canton_energy,
       communes: json2,
-      province: 'non definito',
-      currentProvince: undefined,
+      province: {name: 'Switzerland'},
+      currentProvince: {name: 'Switzerland'},
     };
   },
   created() {
@@ -56,20 +63,25 @@ export default {
 
 
       const width=750
+      const rect_width = 900
       const [minX, minY, maxX, maxY] = bbox(this.geoJsonObj);
 
       // calculate aspect ratio and derive height
       const height = ((maxY - minY) / (maxX - minX)) * width;
+      const rect_height = ((maxY - minY) / (maxX - minX)) * rect_width;
+      
+      const delta_width = rect_width - width
+      const delta_height = rect_height - height
 
-
-      document.getElementById('chart').style.width = width+"px";
-      document.getElementById('chart').style.height = height+"px";
+      document.getElementById('chart').style.width = rect_width+"px";
+      document.getElementById('chart').style.height = rect_width+"px";
+      document.getElementById('main-div').style.maxHeight = rect_height+"px";
       const x = d3.scaleLinear()
-          .range([0, width])
+          .range([delta_width/2, delta_width/2 + width])
           .domain([minX, maxX]);
 
       const y = d3.scaleLinear()
-          .range([0, height])
+          .range([delta_height/2,delta_height/2 + height])
           .domain([maxY, minY]);
       const projection = d3.geoTransform({
         point: function(px, py) {
@@ -89,7 +101,7 @@ export default {
 
 
 
-      let zoom_translation_to_map_center = {tx: width / 2,ty:  height / 2,scale:  1}
+      let zoom_translation_to_map_center = {tx: rect_width / 2,ty:  rect_height / 2,scale:  1}
       let current_canton_info = {zoom_info: zoom_translation_to_map_center, canton_number: 0, canton_selected: false}
 
 
@@ -102,14 +114,14 @@ export default {
           //.range(['#08304b', '#08304b']);
       let centered = undefined;
       const size = {
-        height: height,
-        width: width,
+        height: rect_height,
+        width: rect_width,
       };
 
 
       const svg = d3.select("#chart").append("svg")
-          .attr('width',width)
-          .attr('height',height);
+          .attr('width',rect_width)
+          .attr('height',rect_height);
       const that = this;
 
      // const groupData = [this.geoJsonObj, this.communes];
@@ -117,8 +129,8 @@ export default {
         .append("rect")
         .attr("x", 0)
         .attr("y", 0)
-        .attr("width", width)
-        .attr("height", height)
+        .attr("width", rect_width)
+        .attr("height", rect_height)
         .on('click', clickedBox);
 
       svg.append("g")
@@ -144,7 +156,7 @@ export default {
             //that.selectProvince(d.properties)
           })
           .on('mouseout', function () {
-            that.selectProvince('non definito');
+            that.selectProvince({name: 'Switzerland'});
             // Reset province color
             this.style.fill = canton_color
             /*
@@ -176,11 +188,11 @@ export default {
             //console.log(d.properties)
             console.log(d.properties.canton_number)
             this.style.fill = commune_color_mouse_on;
-            that.selectProvince('non definito');
+            that.selectProvince(d.properties);
             //that.selectProvince(d.properties)
           })
           .on('mouseout', function () {
-            that.selectProvince('non definito');
+            that.selectProvince({name: 'Switzerland'});
             // Reset province color
             this.style.fill = commune_color;
             /*
@@ -330,26 +342,44 @@ export default {
   },
   mounted(){
     this.createSvg();
+    this.createScatterPlot();
   }
 }
 </script>
 
 <style scoped>
+.map-div{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: center;
+  column-gap: 40px;
+  max-width: 1000px; /* or whatever width you want. */
+  max-height: 1000px; /* or whatever width you want. */
+  margin-left: auto;
+  margin-right: auto;
+  overflow: hidden;
+}
 .center-screen {
   display: flex;
   justify-content: center;
   align-items: flex-start;
   text-align: center;
   column-gap: 40px;
-  width: 1000px;
+  width: 1400px;
   height: 1000px;
-  max-width: 1000px; /* or whatever width you want. */
+  max-width: 2000px;
+  
+ /* or whatever width you want. */
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
 }
 
 .province-info {
+  margin-left: auto;
+  order: 2;
   background: #F5F5F7;
   padding: 10px;
 }
