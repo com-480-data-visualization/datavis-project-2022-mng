@@ -1,14 +1,19 @@
 <template>
   <div>
-  <h2 v-if="province" class="province-title">{{province.name}}</h2>
-    <div v-if="currentProvince" class="province-info">
-      <h3 class="text-center">{{currentProvince.state}}</h3>
-      <ul>
-        <li>cartodb_id: {{currentProvince.cartodb_id}}</li>
-        <li>slug: {{currentProvince.slug}}</li>
-      </ul>
+    <div class="center-screen">
+      <div
+          id='chart' >
+
+      </div>
+      <div v-if="currentProvince" class="province-info">
+        <h3 class="text-center">{{currentProvince.state}}</h3>
+        <ul>
+          <li>Informations: {{province.name}}</li>
+        </ul>
+        <h4 class="text-center">Electricity Car share</h4>
+        <Pie class="pie-info"/>
+      </div>
     </div>
-    <div class="center-screen" id='chart' ></div>
   </div>
  <!-- <svg-map :map="Taiwan"></svg-map> -->
 </template>
@@ -20,10 +25,11 @@ import bbox from "@turf/bbox";
 import * as d3 from 'd3'
 import json from '../data/cantons.json';
 import json2 from '../data/communes.json';
+import Pie from "./Pie";
 export default {
   name: "Map",
   components: {
-    //SvgMap
+    Pie
   },
   data() {
     return {
@@ -132,7 +138,7 @@ export default {
             //console.log(d.properties)
             console.log(d.properties.canton_number)
             this.style.fill =  canton_color_mouse_on;
-            that.selectProvince('non definito');
+            that.selectProvince(d.properties);
             //that.selectProvince(d.properties)
           })
           .on('mouseout', function () {
@@ -345,20 +351,20 @@ export default {
 .center-screen {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   text-align: center;
+  column-gap: 40px;
   width: 1000px;
-  height: 1000px;/* or whatever width you want. */
+  height: 800px;/* or whatever width you want. */
   max-width: 1000px; /* or whatever width you want. */
   margin-left: auto;
   margin-right: auto;
 }
 .province-info {
-  background: blue;
-  position: absolute;
-  top: 150px;
-  right: 20px;
-  height: 400px;
-  width: 300px;
+  background: #F5F5F7;
+  padding: 10px;
+}
+.pie-info{
+  width: 450px;
 }
 </style>
