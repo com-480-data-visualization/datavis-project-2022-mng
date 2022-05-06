@@ -12,8 +12,7 @@
         <ul>
           <li>Informations: {{province.name}}</li>
         </ul>
-        <h4 class="text-center">Electricity Car share</h4>
-        <Pie class="pie-info"/>
+        <BarChart class="pie-info"/>
       </div>
     </div>
     <br><br>
@@ -33,10 +32,11 @@ import * as d3 from 'd3'
 import json from '../data/cantons.json';
 import json2 from '../data/communes.json';
 import Pie from "./Pie";
+import BarChart from "./BarChart";
 export default {
   name: "Map",
   components: {
-    Pie
+    BarChart
   },
   data() {
     return {
