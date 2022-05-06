@@ -1,7 +1,7 @@
 # MNG Data Visualization Project - Interactive Swiss Sustainability Map
 
 [Milestone 1 PDF](Milestone1_DATAVIS.pdf)
-[Milestone 2 PDF](Milestone 2.pdf)
+[Milestone 2 PDF](Milestone2_DATAVIS.pdf)
 
 | Student's name  | SCIPER |
 |-----------------|--------|
