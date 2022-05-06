@@ -148,13 +148,10 @@ export default {
           .attr("stroke", canton_stroke)
           .attr("d", path)
           .attr("id", function(d, i) {
-            console.log(i)
             return "canton" + d.properties.canton_number
           })
           .on("mouseover",function (e,d){
             // gives me the correct values
-            //console.log(d.properties)
-            console.log(d.properties.canton_number)
             this.style.fill =  canton_color_mouse_on;
             that.selectProvince(d.properties);
             //that.selectProvince(d.properties)
@@ -183,14 +180,11 @@ export default {
           .attr("stroke", commune_stroke)
           .attr("d", path)
           .attr("id", function(d, i) {
-            console.log(i)
             return "communes" + d.properties.commune_number +"-" + d.properties.canton_number
           })
           .attr("hidden",true)
           .on("mouseover",function (e,d){
             // gives me the correct values
-            //console.log(d.properties)
-            console.log(d.properties.canton_number)
             this.style.fill = commune_color_mouse_on;
             that.selectProvince(d.properties);
             //that.selectProvince(d.properties)
@@ -260,10 +254,7 @@ export default {
             .attr('transform',  'scale(' + k + ')'+'translate(' + size.width / 2 + ',' + size.height / 2  +')translate(' + -x + ',' + -y + ')' );
 
       }
-
-
-      function clickedBox(e,d){
-        console.log(d)
+      function clickedBox(){
         svg.selectAll(".communes")
               .attr("hidden",true)
         svg.selectAll(".cantons")
