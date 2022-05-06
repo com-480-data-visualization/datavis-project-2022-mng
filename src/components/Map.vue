@@ -1,5 +1,5 @@
 
-   
+
 <template>
   <div>
     <div class="center-screen" id="main-div">
@@ -16,7 +16,10 @@
         <Pie class="pie-info"/>
       </div>
     </div>
-    <div class="center-screen" id="time_series"></div>
+    <br><br>
+    <div class="center-screen" style="width: 100%;margin: 0 auto;">
+      <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plotly.com/~ogim/81.embed" height="525" width="100%"></iframe>
+    </div>
      <div class="center-screen" ></div>
   </div>
  <!-- <svg-map :map="Taiwan"></svg-map> -->
@@ -67,7 +70,7 @@ export default {
       // calculate aspect ratio and derive height
       const height = ((maxY - minY) / (maxX - minX)) * width;
       const rect_height = ((maxY - minY) / (maxX - minX)) * rect_width;
-      
+
       const delta_width = rect_width - width
       const delta_height = rect_height - height
 
@@ -95,6 +98,8 @@ export default {
       const commune_stroke_width = 1
       const canton_color_mouse_on = "lightgreen" // previously was: #1483ce
       const commune_color_mouse_on = "#ffc87c" // previously was: #1483ce
+
+      const rect_background_color = "#042800"
 
 
 
@@ -129,6 +134,7 @@ export default {
         .attr("y", 0)
         .attr("width", rect_width)
         .attr("height", rect_height)
+        .attr("fill", rect_background_color)
         .on('click', clickedBox);
 
       svg.append("g")
@@ -367,7 +373,7 @@ export default {
   width: 1400px;
   height: 1000px;
   max-width: 2000px;
-  
+
  /* or whatever width you want. */
   margin-left: auto;
   margin-right: auto;
