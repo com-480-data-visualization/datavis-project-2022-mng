@@ -30,9 +30,11 @@ import Taiwan from "@svg-maps/taiwan";
 import bbox from "@turf/bbox";
 import * as d3 from 'd3'
 import json from '../data/cantons.json';
-import json2 from '../data/communes.json';
+import json2 from '../data/communes2.json';
 import Pie from "./Pie";
 import BarChart from "./BarChart";
+import * as topojson from 'topojson-server';
+import * as topojson2 from 'topojson-client';
 export default {
   name: "Map",
   components: {
@@ -127,7 +129,8 @@ export default {
           .attr('height',rect_height);
       const that = this;
 
-     // const groupData = [this.geoJsonObj, this.communes];
+      console.log(this.communes)
+
       svg
         .append("rect")
         .attr("x", 0)
@@ -160,18 +163,13 @@ export default {
             that.selectProvince({name: 'Switzerland'});
             // Reset province color
             this.style.fill = canton_color
-            /*
-            //svg.selectAll('path')
-              //  .style('fill', 'green' /*(d) => {
-                  return centered && d===centered ? canton_color : fillFn(d);
-
-                });*/
           })
           .on('click', clickedCanton);
 
       svg.append("g")
           .selectAll("path")
-          .data(this.communes.features)
+          .data(topojson2.feature(this.communes,this.communes.objects.communes).features)
+          //.data(this.communes.features)
           .enter()
           .append("path")
           .attr("class", "communes")
@@ -193,17 +191,8 @@ export default {
             that.selectProvince({name: 'Switzerland'});
             // Reset province color
             this.style.fill = commune_color;
-            /*
-           // svg.selectAll('path')
-             //   .style('fill', commune_color /*(d) => {
-                  return centered && d===centered ? canton_color : fillFn(d);
-
-                });*/
           })
           .on('click', clickedCommune);
-
-
-
 
 
       function force_zoom_to_center(){
