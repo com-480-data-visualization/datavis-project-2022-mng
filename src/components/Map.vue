@@ -146,9 +146,7 @@ export default {
         this.energyData_heating.canton = canton_data.heating
         this.energyData_car.canton = canton_data.electric_car
       }
-      console.log(this.energyData_solar)
-      console.log(this.energyData_heating)
-      console.log(this.energyData_car)
+  
     },
 
     change_bar_plot_commune_data(commune_data = null){
@@ -359,8 +357,11 @@ export default {
               .attr("hidden",true)
         svg.selectAll(".cantons")
               .attr("hidden",null)
+              .style('fill', commune_color);
+
         force_zoom_to_center()
         that.change_bar_plot_canton_data(null)
+        that.change_bar_plot_commune_data(null)
         current_canton_info.canton_selected = false
       }
       function clickedCommune(e,d){
@@ -383,7 +384,8 @@ export default {
         if(! current_canton_info.canton_selected){
           svg.selectAll(".communes")
               .attr("hidden",true)
-
+              .style('fill', commune_color);
+          
           svg.selectAll(".communes").filter(function(d2) {
                 return d.properties.canton_number === d2.properties.canton_number
               })
