@@ -7,7 +7,7 @@
           class="map-div"
           id='chart' >
       </div>
-      <div v-if="currentProvince" class="province-info">
+      <div  class="province-info">
         <h3 class="text-center">{{currentProvince.state}}</h3>
         <ul>
           <li>Informations: {{province.name}}</li>
@@ -97,7 +97,7 @@ export default {
       this.currentProvince = province;
     },
     closeInfo() {
-      this.currentProvince = undefined;
+      this.currentProvince = 'Switzerland';
     },
     not_valid_statistic(stat){
       return stat == 'null'
@@ -320,9 +320,9 @@ export default {
 
         //let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
         let [[min_x_coord,min_y_coord],[max_x_coord,max_y_coord]] = path.bounds(d)
-
+        
         // Compute centroid of the selected path
-        if (d && centered !== d) {
+        if (d) {
           var centroid = path.centroid(d);
           x = centroid[0];
           y = centroid[1];
@@ -357,7 +357,7 @@ export default {
               .attr("hidden",true)
         svg.selectAll(".cantons")
               .attr("hidden",null)
-              .style('fill', commune_color);
+              .style('fill', canton_color);
 
         force_zoom_to_center()
         that.change_bar_plot_canton_data(null)
@@ -382,6 +382,7 @@ export default {
 
       function clickedCanton(e,d) {
         if(! current_canton_info.canton_selected){
+          console.log('hi')
           svg.selectAll(".communes")
               .attr("hidden",true)
               .style('fill', commune_color);
@@ -406,6 +407,7 @@ export default {
           zoom_to_region(d,zoom_translation_to_map_center,true)
         }
         else{
+          console.log('lds')
           svg.selectAll(".communes")
               .attr("hidden",true)
           svg.selectAll(".cantons")
