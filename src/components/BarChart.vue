@@ -12,7 +12,7 @@
   />
 </template> -->
 <template>
-  <Bar :chart-data="chartData" :chart-options="chartOptions" />
+  <Bar :chart-data="chartData" :chart-options="chartOptions" :width="width" :height="height" />
 </template>
 
 
@@ -26,12 +26,20 @@ export default {
   name: 'BarChart',
   components: {Bar},
   props:{
-    'dataEnergies': Object
+    'dataEnergies': Object,
+    'width': {
+      type: Number,
+      default: 400
+    },
+    height: {
+      type: Number,
+      default: 400
+    },
   },
   computed: {
     chartData() {
       return {
-              labels: [ 'Renewable heating', 'Electric car', 'Solar potential usage' ],
+              labels:  this.dataEnergies.labels ,
               datasets: [ 
                             { data: this.dataEnergies.country.data,
                               backgroundColor: '#7272FE',
