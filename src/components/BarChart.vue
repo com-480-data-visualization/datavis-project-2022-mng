@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <Bar
       :chart-options="chartOptions"
       :chart-data="chartData"
@@ -10,7 +10,12 @@
       :width="width"
       :height="height"
   />
+</template> -->
+<template>
+  <Bar :chart-data="chartData" :chart-options="chartOptions" />
 </template>
+
+
 
 <script>
 import { Bar } from 'vue-chartjs/legacy'
@@ -19,45 +24,33 @@ import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, Li
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 export default {
   name: 'BarChart',
-  components: { Bar },
-  props: {
-    chartId: {
-      type: String,
-      default: 'bar-chart'
-    },
-    datasetIdKey: {
-      type: String,
-      default: 'label'
-    },
-    width: {
-      type: Number,
-      default: 400
-    },
-    height: {
-      type: Number,
-      default: 400
-    },
-    cssClasses: {
-      default: '',
-      type: String
-    },
-    styles: {
-      type: Object,
-      default: () => {}
-    },
-    plugins: {
-      type: Object,
-      default: () => {}
-    }
+  components: {Bar},
+  props:{
+    'dataEnergies': Object
   },
-  data() {
-    return {
-      chartData: {
-        labels: [ 'Renewable heating', 'Electric car', 'Solar potential usage' ],
-        datasets: [ { data: [40, 20, 12],backgroundColor: '#042800',label: 'Canton share'} ]
+  computed: {
+    chartData() {
+      return {
+              labels: [ 'Renewable heating', 'Electric car', 'Solar potential usage' ],
+              datasets: [ 
+                            { data: this.dataEnergies.country.data,
+                              backgroundColor: '#7272FE',
+                              label: this.dataEnergies.country.label
+                            },
+                            { data: this.dataEnergies.canton.data,
+                              backgroundColor: '#98fb98',
+                              label: this.dataEnergies.canton.label
+                            },
+                            { data: this.dataEnergies.commune.data,
+                              backgroundColor: '#fd5e53',
+                              label: this.dataEnergies.commune.label
+                            }
+                         ]
+            } 
       },
-      chartOptions: {
-        responsive: true
+    chartOptions() {
+      return { 
+        chartOptions: {responsive: true}
       }
     }
   }

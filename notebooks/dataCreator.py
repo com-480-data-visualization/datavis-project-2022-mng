@@ -12,11 +12,11 @@ def merge_canton_datasets(cantons_geo,df_canton):
         canton_nb = canton['properties']['canton_number']
   
         data = df_canton.loc[canton_nb]
-        cantons_geo['features'][i]['properties']['energyreporter_date'] = data['energyreporter_date']
-        cantons_geo['features'][i]['properties']['electric_car_share'] = data['electric_car_share']
-        cantons_geo['features'][i]['properties']['renewable_heating_share'] = data['renewable_heating_share']
-        cantons_geo['features'][i]['properties']['solar_potential_usage'] = data['solar_potential_usage']
-        cantons_geo['features'][i]['properties']['renewable_heating_share_coverage'] = data['renewable_heating_share_coverage']
+        cantons_geo['features'][i]['properties']['energyreporter_date'] = ' '.join(str(x) for x in data['energyreporter_date'])
+        cantons_geo['features'][i]['properties']['electric_car_share'] = ' '.join(str(x) for x in data['electric_car_share'])
+        cantons_geo['features'][i]['properties']['renewable_heating_share'] = ' '.join(str(x) for x in data['renewable_heating_share'])
+        cantons_geo['features'][i]['properties']['solar_potential_usage'] = ' '.join(str(x) for x in data['solar_potential_usage'])
+        cantons_geo['features'][i]['properties']['renewable_heating_share_coverage'] = ' '.join(str(x) for x in data['renewable_heating_share_coverage'])
     return cantons_geo
 
 def merge_communes_datasets(communes_geo,df_communes):
@@ -25,19 +25,20 @@ def merge_communes_datasets(communes_geo,df_communes):
     
     for i,commune in enumerate(cantons_geo_copy['features']):
         commune_nb = commune['properties']['commune_number']
-        try:
+        if commune_nb in df_communes.index:
             data = df_communes.loc[commune_nb]
-            communes_geo['features'][i]['properties']['energyreporter_date'] = list(map(lambda x: -1 if np.isnan(x) else x,data['energyreporter_date']))
-            communes_geo['features'][i]['properties']['electric_car_share'] = list(map(lambda x: -1 if np.isnan(x) is None else x,data['electric_car_share']))
-            communes_geo['features'][i]['properties']['renewable_heating_share'] = list(map(lambda x: -1 if np.isnan(x) is None else x,data['renewable_heating_share']))
-            communes_geo['features'][i]['properties']['solar_potential_usage'] = list(map(lambda x: -1 if np.isnan(x) else x,data['solar_potential_usage']))
-            communes_geo['features'][i]['properties']['renewable_heating_share_coverage'] = list(map(lambda x: -1 if np.isnan(x) else x,data['renewable_heating_share_coverage']))
-        except:
-            communes_geo['features'][i]['properties']['energyreporter_date'] = ['null']
-            communes_geo['features'][i]['properties']['electric_car_share'] = ['null']
-            communes_geo['features'][i]['properties']['renewable_heating_share'] = ['null']
-            communes_geo['features'][i]['properties']['solar_potential_usage'] = ['null']
-            communes_geo['features'][i]['properties']['renewable_heating_share_coverage'] = ['null']
+            communes_geo['features'][i]['properties']['energyreporter_date'] = ' '.join(str(x) for x in data['energyreporter_date'])
+            communes_geo['features'][i]['properties']['electric_car_share'] = ' '.join(str(x) for x in data['electric_car_share'])
+            communes_geo['features'][i]['properties']['renewable_heating_share'] = ' '.join(str(x) for x in data['renewable_heating_share'])
+            communes_geo['features'][i]['properties']['solar_potential_usage'] = ' '.join(str(x) for x in data['solar_potential_usage'])
+            communes_geo['features'][i]['properties']['renewable_heating_share_coverage'] = ' '.join(str(x) for x in data['renewable_heating_share_coverage'])
+        else:
+            communes_geo['features'][i]['properties']['energyreporter_date'] = 'null'
+            communes_geo['features'][i]['properties']['electric_car_share'] = 'null'
+            communes_geo['features'][i]['properties']['renewable_heating_share'] = 'null'
+            communes_geo['features'][i]['properties']['solar_potential_usage'] = 'null'
+            communes_geo['features'][i]['properties']['renewable_heating_share_coverage'] = 'null'
+            
     return communes_geo
 
 def convert_file_to_topo_json(file_path,new_file_path):

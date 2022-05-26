@@ -12,7 +12,7 @@
         <ul>
           <li>Informations: {{province.name}}</li>
         </ul>
-        <BarChart class="pie-info"/>
+        <BarChart :dataEnergies="energyData" ></BarChart>
       </div>
     </div>
     <br><br>
@@ -25,49 +25,120 @@
 </template>
 
 <script>
+
 //import { SvgMap } from "vue-svg-map";
 import Taiwan from "@svg-maps/taiwan";
 import bbox from "@turf/bbox";
 import * as d3 from 'd3'
-import json from '../data/cantons.json';
-import json2 from '../data/communes2.json';
+import json from '../data/cantons.topo.json';
+import json2 from '../data/communes.topo.json';
 import Pie from "./Pie";
 import BarChart from "./BarChart";
-import * as topojson from 'topojson-server';
-import * as topojson2 from 'topojson-client';
+//import * as topojson from 'topojson-server';
+import * as topojson from "topojson-client";
 export default {
   name: "Map",
-  components: {
-    BarChart
-  },
+  components: {BarChart},
   data() {
     return {
       Taiwan,
-      geoJsonObj: json,
-      communes: json2,
+      cantons: topojson.feature(json,json.objects.cantons),
+      communes: topojson.feature(json2,json2.objects.communes),
       province: {name: 'Switzerland'},
       currentProvince: {name: 'Switzerland'},
+
+      default_canton_energy_data : {
+                                      data: null,
+                                      label: 'canton'
+                                    },
+      default_commune_energy_data: {
+                                      data: null,
+                                      label: 'commune'
+                                    },
+      
+      default_country_energy_data: {
+                                      data: [0.326350,0.017949,0.054933],
+                                      label: 'Switzerland'
+                                    },
+
+      energyData: { country: {data: null, label: 'Switzerland'},
+                    canton:  {data: null, label: 'canton'},
+                    commune: {data: null, label: 'commune'}
+                  }
     };
   },
   created() {
   },
   methods:{
-      selectProvince(province) {
-        this.province = province;
-      },
-      openInfo(province) {
-        this.currentProvince = province;
-      },
-      closeInfo() {
-        this.currentProvince = undefined;
-      },
+    selectProvince(province) {
+      this.province = province;
+    },
+    openInfo(province) {
+      this.currentProvince = province;
+    },
+    closeInfo() {
+      this.currentProvince = undefined;
+    },
+    not_valid_statistic(stat){
+      return stat == 'null'
+    },
+    get_latest_energy_data(region){
+      let electric_car_share_time_series = region.electric_car_share.split(' ')
+      
+      var el_car_share_most_recent = electric_car_share_time_series[electric_car_share_time_series.length -1]
+     
+      //check if it's a valid statistic
+   
+      if(this.not_valid_statistic(el_car_share_most_recent))
+        el_car_share_most_recent = null
+
+      let renewable_heating_share_time_series = region.renewable_heating_share.split(' ')
+      var ren_heat_share_most_recent = renewable_heating_share_time_series[renewable_heating_share_time_series.length -1]
+      //check if it's a valid statistic
+      if(this.not_valid_statistic(ren_heat_share_most_recent))
+        ren_heat_share_most_recent = null
+
+
+      let solar_potential_usage_time_series = region.solar_potential_usage.split(' ')
+      var sol_pot_usage_most_recent = solar_potential_usage_time_series[solar_potential_usage_time_series.length -1]
+      //check if it's a valid statistic
+      if(this.not_valid_statistic(sol_pot_usage_most_recent))
+        sol_pot_usage_most_recent = null
+
+
+      return {
+              data: [ren_heat_share_most_recent,
+                      el_car_share_most_recent,
+                      sol_pot_usage_most_recent],
+              label: region.name
+            }
+    },
+
+    change_bar_plot_canton_data(canton_data){
+
+      //change canton data on bar plot (if nothing is stated set everythin to null)
+      if (canton_data == null) {
+        this.energyData.canton = this.default_canton_energy_data
+      }
+      else
+        this.energyData.canton = canton_data
+    },
+
+    change_bar_plot_commune_data(commune_data = null){
+
+      if(commune_data == null){
+        this.energyData.commune = this.default_commune_energy_data
+      }
+      else
+        this.energyData.commune = commune_data
+    },
+
     createSvg(){
-    // get extent of switzerland as x, y coordinates
-
-
+    
       const width=750
       const rect_width = 900
-      const [minX, minY, maxX, maxY] = bbox(this.geoJsonObj);
+      const [minX, minY, maxX, maxY] = bbox(this.cantons);
+      console.log(minX)
 
       // calculate aspect ratio and derive height
       const height = ((maxY - minY) / (maxX - minX)) * width;
@@ -91,6 +162,7 @@ export default {
           this.stream.point(x(px), y(py));
         },
       });
+
       const path = d3.geoPath().projection(projection);
       const canton_color = "green" //previously was steelblue
       const commune_color = "orange" //previously was steelblue
@@ -110,13 +182,6 @@ export default {
       let current_canton_info = {zoom_info: zoom_translation_to_map_center, canton_number: 0, canton_selected: false}
 
 
-
-
-     // const color = d3.scaleLinear()
-       //   .domain([1, 20])
-         // .clamp(true)
-          //.range(['green', 'lightgreen']);
-          //.range(['#08304b', '#08304b']);
       let centered = undefined;
       const size = {
         height: rect_height,
@@ -129,7 +194,7 @@ export default {
           .attr('height',rect_height);
       const that = this;
 
-      console.log(this.communes)
+      //console.log(this.communes)
 
       svg
         .append("rect")
@@ -142,7 +207,8 @@ export default {
 
       svg.append("g")
           .selectAll("path")
-          .data(this.geoJsonObj.features)
+          //.data(topojson2.feature(this.cantons,this.communes.objects.cantons).features)
+          .data(this.cantons.features)
           .enter()
           .append("path")
           .attr("class", "cantons")
@@ -168,8 +234,8 @@ export default {
 
       svg.append("g")
           .selectAll("path")
-          .data(topojson2.feature(this.communes,this.communes.objects.communes).features)
-          //.data(this.communes.features)
+          //.data(topojson2.feature(this.communes,this.communes.objects.communes).features)
+          .data(this.communes.features)
           .enter()
           .append("path")
           .attr("class", "communes")
@@ -249,10 +315,12 @@ export default {
         svg.selectAll(".cantons")
               .attr("hidden",null)
         force_zoom_to_center()
+        that.change_bar_plot_canton_data(null)
         current_canton_info.canton_selected = false
       }
       function clickedCommune(e,d){
-        zoom_to_region(d,current_canton_info.zoom_info, false)
+        that.change_bar_plot_commune_data(that.get_latest_energy_data(d.properties))
+        //zoom_to_region(d,current_canton_info.zoom_info, false)
       }
 
       function clickedCanton(e,d) {
@@ -273,7 +341,7 @@ export default {
               })
               .attr("hidden",true)
 
-
+          that.change_bar_plot_canton_data(that.get_latest_energy_data(d.properties))
           //this.style.display = "none";
           current_canton_info.canton_selected = true
 
@@ -285,24 +353,10 @@ export default {
           svg.selectAll(".cantons")
               .attr("hidden",null)
           force_zoom_to_center()
+          that.change_bar_plot_canton_data(null)
+          that.change_bar_plot_commune_data(null)
           current_canton_info.canton_selected = false
         }
-
-          //or to hide the all svg
-          //document.getElementById("mySvg").style.display = "none";
-
-
-
-        //}
-        /*
-        else{
-          svg.transition()
-              .duration(750)
-              //undefined allows for faster zoomed out.
-              .attr('transform',undefined)
-          zoomed = false
-        }
-*/
       }
 
 /*
@@ -325,7 +379,13 @@ export default {
     },
   },
   mounted(){
+    this.energyData = { 
+                        country: this.default_country_energy_data,
+                        canton:  this.default_canton_energy_data,
+                        commune: this.default_commune_energy_data
+                      }
     this.createSvg();
+
   }
 }
 </script>
