@@ -21,7 +21,7 @@
     <div class="center-screen" style="width: 100%;margin: 0 auto;">
       <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plotly.com/~ogim/81.embed" height="525" width="100%"></iframe>
     </div>
-     <div class="center-screen" ></div>
+
   </div>
  <!-- <svg-map :map="Taiwan"></svg-map> -->
 </template>
@@ -83,8 +83,8 @@ export default {
                               commune: {data: null, label: 'commune'}
                             }
 
-     
-                  
+
+
       }
   },
   created() {
@@ -104,11 +104,11 @@ export default {
     },
     get_latest_energy_data(region){
       let electric_car_share_time_series = region.electric_car_share.split(' ')
-      
+
       var el_car_share_most_recent = electric_car_share_time_series[electric_car_share_time_series.length -1]
-     
+
       //check if it's a valid statistic
-   
+
       if(this.not_valid_statistic(el_car_share_most_recent))
         el_car_share_most_recent = null
 
@@ -146,7 +146,7 @@ export default {
         this.energyData_heating.canton = canton_data.heating
         this.energyData_car.canton = canton_data.electric_car
       }
-  
+
     },
 
     change_bar_plot_commune_data(commune_data = null){
@@ -164,7 +164,7 @@ export default {
     },
 
     createSvg(){
-    
+
       const width=750
       const rect_width = 900
       const [minX, minY, maxX, maxY] = bbox(this.cantons);
@@ -206,7 +206,7 @@ export default {
 
       const rect_background_color = "#042800"
 
-     
+
 
 
       let zoom_translation_to_map_center = {tx: rect_width / 2,ty:  rect_height / 2,scale:  1}
@@ -290,16 +290,16 @@ export default {
           .on('mouseout', function () {
             that.selectProvince({name: 'Switzerland'});
             // Reset province color
-            
-          
+
+
 
             if (this.style.fill.replace(/\s+/g, '') != commune_selected_color.replace(/\s+/g, '') &&
                 this.style.fill.replace(/\s+/g, '') != commune_selected_color_mouse_on.replace(/\s+/g, ''))
               this.style.fill = commune_color;
-            
+
             else
               this.style.fill = commune_selected_color
-            
+
           })
           .on('click', clickedCommune);
 
@@ -320,7 +320,7 @@ export default {
 
         //let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
         let [[min_x_coord,min_y_coord],[max_x_coord,max_y_coord]] = path.bounds(d)
-        
+
         // Compute centroid of the selected path
         if (d) {
           var centroid = path.centroid(d);
@@ -366,16 +366,16 @@ export default {
       }
       function clickedCommune(e,d){
         that.change_bar_plot_commune_data(that.get_latest_energy_data(d.properties))
-        
+
 
         svg.selectAll(".communes").filter(function(d2) {
                 return this.style.fill.replace(/\s+/g, '') == commune_selected_color.replace(/\s+/g, '') &&
                        d.properties != d2.properties
               })
               .style('fill', commune_color);
-     
+
         this.style.fill = commune_selected_color
-       
+
 
         //zoom_to_region(d,current_canton_info.zoom_info, false)
       }
@@ -386,7 +386,7 @@ export default {
           svg.selectAll(".communes")
               .attr("hidden",true)
               .style('fill', commune_color);
-          
+
           svg.selectAll(".communes").filter(function(d2) {
                 return d.properties.canton_number === d2.properties.canton_number
               })
@@ -439,9 +439,9 @@ export default {
     },
   },
   mounted(){
-    this.energyData_solar.country = this.default_country_energy_data.solar 
-    this.energyData_heating.country = this.default_country_energy_data.heating 
-    this.energyData_car.country = this.default_country_energy_data.electric_car 
+    this.energyData_solar.country = this.default_country_energy_data.solar
+    this.energyData_heating.country = this.default_country_energy_data.heating
+    this.energyData_car.country = this.default_country_energy_data.electric_car
     this.createSvg();
   }
 }
@@ -468,7 +468,7 @@ export default {
   text-align: center;
   column-gap: 40px;
   width: 1400px;
-  height: 1000px;
+  height: 500px;
   max-width: 2000px;
 
  /* or whatever width you want. */

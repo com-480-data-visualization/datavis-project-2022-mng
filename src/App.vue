@@ -2,6 +2,7 @@
   <v-app id="app">
     <HelloWorld/>
     <Map/>
+    <HeatMap/>
     <v-footer
         dark
         padless
@@ -43,11 +44,13 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import Map from "./components/Map.vue";
+import HeatMap from "./components/HeatMap";
 //import * as d3 from 'd3'
 
 export default {
   name: 'App',
   components: {
+    HeatMap,
     HelloWorld,Map
   },
   data(){
