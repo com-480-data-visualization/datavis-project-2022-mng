@@ -40,7 +40,7 @@ export default {
     chartData() {
       return {
               labels:  this.dataEnergies.labels ,
-              datasets: [ 
+              datasets: [
                             { data: this.dataEnergies.country.data,
                               backgroundColor: '#7272FE',
                               label: this.dataEnergies.country.label
@@ -54,10 +54,10 @@ export default {
                               label: this.dataEnergies.commune.label
                             }
                          ]
-            } 
+            }
       },
     chartOptions() {
-      return { 
+      return {
         chartOptions: {responsive: true}
       }
     }

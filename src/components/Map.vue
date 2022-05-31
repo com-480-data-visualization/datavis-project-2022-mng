@@ -468,7 +468,7 @@ export default {
   text-align: center;
   column-gap: 40px;
   width: 1400px;
-  height: 500px;
+  height: 1000px;
   max-width: 2000px;
 
  /* or whatever width you want. */

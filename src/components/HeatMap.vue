@@ -88,7 +88,7 @@ export default {
               energy_array = d.properties.renewable_heating_share.split(" ")
             }
             var energy_recent_value = parseFloat(energy_array[energy_array.length - 1])
-            console.log(energy_recent_value)
+            console.log(d.properties.solar_potential_usage.split(" ").length)
             return colorScale(energy_recent_value);
           });
       svg.append("g")
