@@ -31,25 +31,39 @@ export default {
       type: Number,
       default: 400
     },
-    height: {
+    'height': {
       type: Number,
       default: 400
-    },
+    }
   },
   computed: {
     chartData() {
       return {
               labels:  this.dataEnergies.labels ,
               datasets: [ 
-                            { data: this.dataEnergies.country.data,
+                            { data: [this.dataEnergies.country.data === null ? null : this.dataEnergies.country.data[0]*100,
+                                    this.dataEnergies.country.data === null ? null : this.dataEnergies.country.data[0]*100,
+                                     null],
                               backgroundColor: '#7272FE',
                               label: this.dataEnergies.country.label
                             },
-                            { data: this.dataEnergies.canton.data,
+                            { data: [(this.dataEnergies.canton.data === null ?
+                                        null :
+                                        this.dataEnergies.canton.data[0]*100),
+                                     (this.dataEnergies.canton.data === null  ?
+                                        null :
+                                        this.dataEnergies.canton.data[0]*this.dataEnergies.canton.population/this.dataEnergies.country.population*100),
+                                     (this.dataEnergies.canton.data === null ? null : this.dataEnergies.canton.data[0]*100)],
                               backgroundColor: '#98fb98',
                               label: this.dataEnergies.canton.label
                             },
-                            { data: this.dataEnergies.commune.data,
+                            { data: [ (this.dataEnergies.commune.data === null ? 
+                                        null :
+                                        this.dataEnergies.commune.data[0]*100),
+                                      null,
+                                      (this.dataEnergies.commune.data === null && this.dataEnergies.commune.population === null?
+                                        null :
+                                        this.dataEnergies.commune.data[0] * this.dataEnergies.commune.population/this.dataEnergies.canton.population)*100],
                               backgroundColor: '#fd5e53',
                               label: this.dataEnergies.commune.label
                             }
@@ -58,8 +72,10 @@ export default {
       },
     chartOptions() {
       return { 
-        chartOptions: {responsive: true}
-      }
+        chartOptions: {
+                        responsive: true,
+                      }
+                }
     }
   }
 }

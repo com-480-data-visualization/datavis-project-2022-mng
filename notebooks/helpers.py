@@ -10,6 +10,9 @@ CANTON_PATH = BORDERS_PATH + "swissBOUNDARIES3D_1_3_TLM_KANTONSGEBIET.shp"
 ENERGY_REPORTER_HISTORY_PATH = DATA_FOLDER_PATH + 'energyreporter_historized/'
 ENERGY_REPORTER_LATEST_PATH = DATA_FOLDER_PATH + 'energyreporter_latest/'
 
+#population data
+POPULATION_PATH = DATA_FOLDER_PATH + 'px-x-0102020000_201_20220406-142814.xlsx'
+
 #CSV FILE HISTORIZED PATHS
 ENERGY_REPORTER_HISTORY_CANTON_PATH = ENERGY_REPORTER_HISTORY_PATH + 'energyreporter_canton_historized.csv'
 ENERGY_REPORTER_HISTORY_MUNICIPALITY_PATH = ENERGY_REPORTER_HISTORY_PATH + 'energyreporter_municipality_historized.csv'
@@ -43,6 +46,33 @@ canton_to_canton_number = {'AG': 19, \
                            'VS': 23, \
                            'ZG': 9, \
                            'ZH': 1}
+
+canton_pop_to_canton_number = {'Aargau': 19, \
+                           'Appenzell Innerrhoden': 16, \
+                           'Appenzell Ausserrhoden': 15, \
+                           'Bern / Berne': 2, \
+                           'Basel-Landschaft': 13, \
+                           'Basel-Stadt': 12, \
+                           'Fribourg / Freiburg': 10, \
+                           'Genève': 25, \
+                           'Glarus': 8, \
+                           'Graubünden / Grigioni / Grischun': 18, \
+                           'Jura': 26, \
+                           'Luzern': 3, \
+                           'Neuchâtel': 24, \
+                           'Nidwalden': 7, \
+                           'Obwalden': 6, \
+                           'St. Gallen': 17, \
+                           'Schaffhausen': 14, \
+                           'Solothurn': 11, \
+                           'Schwyz': 5, \
+                           'Thurgau': 20,  \
+                           'Ticino': 21, \
+                           'Uri': 4, \
+                           'Vaud': 22, \
+                           'Valais / Wallis': 23, \
+                           'Zug': 9, \
+                           'Zürich': 1}
 
 def write_json(dictionary, filepath):
     with open(filepath, "w") as final:
