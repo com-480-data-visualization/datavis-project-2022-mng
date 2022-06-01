@@ -68,14 +68,12 @@ export default {
                               label: this.dataEnergies.commune.label
                             }
                          ]
-            } 
+            }
       },
     chartOptions() {
-      return { 
-        chartOptions: {
-                        responsive: true,
-                      }
-                }
+      return {
+        chartOptions: {responsive: true}
+      }
     }
   }
 }

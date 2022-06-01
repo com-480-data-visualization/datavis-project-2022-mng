@@ -2,6 +2,8 @@
   <v-app id="app">
     <HelloWorld/>
     <Map/>
+    <TimeSeries/>
+    <HeatMap/>
     <v-footer
         dark
         padless
@@ -43,11 +45,16 @@
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 import Map from "./components/Map.vue";
+import HeatMap from "./components/HeatMap";
+import TimeSeries from "./components/TimeSeries";
+//import json from '../data/cantons.topo.json';
 //import * as d3 from 'd3'
 
 export default {
   name: 'App',
   components: {
+    TimeSeries,
+    HeatMap,
     HelloWorld,Map
   },
   data(){
