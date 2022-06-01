@@ -20,7 +20,8 @@
     "vue": "^2.6.11",
     "vue-chartjs": "^4.0.7",
     "vue-svg-map": "^1.2.0",
-    "vuetify": "^2.4.0"
+    "vuetify": "^2.4.0",
+    "vue-apexcharts": "^1.6.2"
   },
   "devDependencies": {
     "@turf/bbox": "^6.5.0",
