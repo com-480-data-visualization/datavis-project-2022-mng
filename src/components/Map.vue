@@ -26,15 +26,15 @@
       </div>
       <div  class="province-info">
         <h3 class="text-center">{{currentProvince.state}}</h3>
-        <BarChart :dataEnergies="energyData_solar" :width=250 :height=150 title='Solar Potential Usage' ></BarChart>
-        <BarChart :dataEnergies="energyData_heating" :width=250 :height=150 title="Renewable Heating Share"></BarChart>
-        <BarChart :dataEnergies="energyData_car" :width=250 :height=150 title="Electric Car Share"></BarChart>
+        <BarChart :dataEnergies="energyData_solar" :width=300 :height=150 title='Solar Potential Usage' ></BarChart>
+        <BarChart :dataEnergies="energyData_heating" :width=300 :height=150 title="Renewable Heating Share"></BarChart>
+        <BarChart :dataEnergies="energyData_car" :width=300 :height=150 title="Electric Car Share"></BarChart>
       </div>
       <div  class="province-info">
         <h3 class="text-center">{{currentProvince.state}}</h3>
-        <BarChart :dataEnergies="calculatePercentageContribution(energyData_solar)" :width=300 :height=150 title='Solar Potential Usage Relative Contribution (log scale)' :logarithmic=true></BarChart>
-        <BarChart :dataEnergies="calculatePercentageContribution(energyData_heating)" :width=300 :height=150 title="Renewable Heating Share Relative Contribution (log scale)" :logarithmic=true></BarChart>
-        <BarChart :dataEnergies="calculatePercentageContribution(energyData_car)" :width=300 :height=150 title="Electric Car Share Relative Contribution (log scale)" :logarithmic=true></BarChart>
+        <BarChart :dataEnergies="energyData_solar_perc_contr" :width=300 :height=150 title='Solar Potential Usage Relative Contribution (log scale)' :logarithmic=true></BarChart>
+        <BarChart :dataEnergies="energy_Data_heating_perc_contr" :width=300 :height=150 title="Renewable Heating Share Relative Contribution (log scale)" :logarithmic=true></BarChart>
+        <BarChart :dataEnergies="energyData_car_perc_contr" :width=300 :height=150 title="Electric Car Share Relative Contribution (log scale)" :logarithmic=true></BarChart>
       </div>
     </div>
   </div>
@@ -93,14 +93,30 @@ export default {
                               country: {data:  [null], label: 'Switzerland', population: 8606033},
                               canton:  {data:  [null], label: 'canton', population: null},
                               commune: {data:  [null], label: 'commune', population: null}
-                            }
-
-
-
+                            },
+      energy_Data_heating_perc_contr: {
+                                        labels: [''],
+                                        country: {data:  [null], label: 'Switzerland', population: 8606033},
+                                        canton:  {data:  [null], label: 'canton', population: null},
+                                        commune: {data:  [null], label: 'commune', population: null}
+                                      },
+      energyData_car_perc_contr: {
+                                    labels: [''],
+                                    country: {data:  [null], label: 'Switzerland', population: 8606033},
+                                    canton:  {data:  [null], label: 'canton', population: null},
+                                    commune: {data:  [null], label: 'commune', population: null}
+                                  },
+      energyData_solar_perc_contr: {
+                                      labels: [''],
+                                      country: {data:  [null], label: 'Switzerland', population: 8606033},
+                                      canton:  {data:  [null], label: 'canton', population: null},
+                                      commune: {data:  [null], label: 'commune', population: null}
+                                    }
       }
   },
   created() {
   },
+ 
   methods:{
     calculatePercentageContribution(dataset){
       return {
@@ -185,6 +201,13 @@ export default {
         this.energyData_heating.canton = canton_data.heating
         this.energyData_car.canton = canton_data.electric_car
       }
+      
+      this.energy_Data_heating_perc_contr = this.calculatePercentageContribution(this.energyData_heating)
+
+      this.energyData_car_perc_contr = this.calculatePercentageContribution(this.energyData_car)
+   
+      this.energyData_solar_perc_contr = this.calculatePercentageContribution(this.energyData_solar)
+  
 
     },
 
@@ -200,6 +223,12 @@ export default {
         this.energyData_heating.commune = commune_data.heating
         this.energyData_car.commune = commune_data.electric_car
       }
+
+      this.energy_Data_heating_perc_contr = this.calculatePercentageContribution(this.energyData_heating)
+
+      this.energyData_car_perc_contr = this.calculatePercentageContribution(this.energyData_car)
+   
+      this.energyData_solar_perc_contr = this.calculatePercentageContribution(this.energyData_solar)
     },
 
     createSvg(){
@@ -478,6 +507,9 @@ export default {
     this.energyData_solar.country = this.default_country_energy_data.solar
     this.energyData_heating.country = this.default_country_energy_data.heating
     this.energyData_car.country = this.default_country_energy_data.electric_car
+    this.energy_Data_heating_perc_contr = this.calculatePercentageContribution(this.energyData_heating)
+    this.energyData_car_perc_contr = this.calculatePercentageContribution(this.energyData_car)
+    this.energyData_solar_perc_contr = this.calculatePercentageContribution(this.energyData_solar)
     this.createSvg();
   }
 }

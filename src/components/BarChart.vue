@@ -99,12 +99,14 @@ export default {
               categories: this.dataEnergies.labels,
             },
             yaxis: {
+              tickAmount: 3,
               title: {
                 text: 'percentage (%)'
               },
+              
               labels: {
                   formatter: function (value) {
-                    return value.toFixed(0) + "%";
+                    return value.toFixed(1) + "%";
                   }
               },
               logarithmic: this.logarithmic
