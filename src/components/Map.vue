@@ -17,19 +17,10 @@
         <BarChart :dataEnergies="energyData_car" :width=500 :height=170></BarChart>
       </div>
     </div>
-    <br><br>
-    <div class="center-screen" style="width: 100%;margin: 0 auto;">
-      <iframe id="igraph" scrolling="no" style="border:none;" seamless="seamless" src="https://plotly.com/~ogim/81.embed" height="525" width="100%"></iframe>
-    </div>
-
   </div>
- <!-- <svg-map :map="Taiwan"></svg-map> -->
 </template>
 
 <script>
-
-//import { SvgMap } from "vue-svg-map";
-import Taiwan from "@svg-maps/taiwan";
 import bbox from "@turf/bbox";
 import * as d3 from 'd3'
 import json from '../data/cantons.topo.json';
@@ -43,7 +34,6 @@ export default {
   components: {BarChart},
   data() {
     return {
-      Taiwan,
       cantons: topojson.feature(json,json.objects.cantons),
       communes: topojson.feature(json2,json2.objects.communes),
       province: {name: 'Switzerland'},

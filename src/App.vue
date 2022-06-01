@@ -2,7 +2,9 @@
   <v-app id="app">
     <HelloWorld/>
     <Map/>
-    <TimeSeries/>
+    <TimeSeries :data-energies="energyData_car" type="Electric car share"/>
+    <TimeSeries :data-energies="energyData_solar" type="Solar panel share"/>
+    <TimeSeries :data-energies="energyData_heating" type="Renewable heating usage"/>
     <HeatMap/>
     <v-footer
         dark
@@ -47,7 +49,8 @@ import HelloWorld from './components/HelloWorld.vue'
 import Map from "./components/Map.vue";
 import HeatMap from "./components/HeatMap";
 import TimeSeries from "./components/TimeSeries";
-//import json from '../data/cantons.topo.json';
+import json from './data/cantons.topo.json';
+import * as topojson from "topojson-client";
 //import * as d3 from 'd3'
 
 export default {
@@ -59,10 +62,30 @@ export default {
   },
   data(){
     return{
-      linkedin:
-          'mdi-linkedin'
+      linkedin: 'mdi-linkedin',
+      timeSeriesValues: topojson.feature(json,json.objects.cantons),
+      energyData_solar: null,
+      energyData_heating: null,
+      energyData_car: null
     }
   },
+  created() {
+    this.energyData_car = this.createData("electric_car_share")
+    this.energyData_solar = this.createData("solar_potential_usage")
+    this.energyData_heating = this.createData("renewable_heating_share")
+  },
+  methods:{
+    createData(which_energy){
+      var arr_to_pass = []
+      this.timeSeriesValues.features.forEach((item) =>
+      {
+        return arr_to_pass.push({'name':item.properties.name,
+          'data': item.properties[which_energy].split(" ").map(parseFloat),'timeline': item.properties["energyreporter_date"].split(" ")})
+      })
+
+      return arr_to_pass
+    }
+  }
 }
 </script>
 
