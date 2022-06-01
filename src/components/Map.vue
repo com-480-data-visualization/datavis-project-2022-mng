@@ -40,37 +40,39 @@ export default {
       currentProvince: {name: 'Switzerland'},
       default_canton_energy_data : {
                                       data: null,
+                                      population: null,
                                       label: 'canton'
                                     },
       default_commune_energy_data: {
                                       data: null,
+                                      population: null,
                                       label: 'commune'
                                     },
       default_country_energy_data: {
-                                      solar: {label: 'Switzerland',data: [0.054933]},
-                                      electric_car: {label: 'Switzerland',data: [0.017949]},
-                                      heating: {label: 'Switzerland',data: [0.326350]}
+                                      solar: {label: 'Switzerland',data: [0.054933], population: 8606033},
+                                      electric_car: {label: 'Switzerland',data: [0.017949], population: 8606033},
+                                      heating: {label: 'Switzerland',data: [0.326350], population: 8606033}
                                     },
 
       energyData_solar:  {
-                              labels: ['Solar potential usage'],
-                              country: {data: null, label: 'Switzerland'},
-                              canton:  {data: null, label: 'canton'},
-                              commune: {data: null, label: 'commune'}
+                              labels: ['Solar Potential usage', 'Solar potential National Contribution','Solar Potential Canton Contribution'],
+                              country: {data: null, label: 'Switzerland', population: 8606033},
+                              canton:  {data: null, label: 'canton', population: null},
+                              commune: {data: null, label: 'commune', population: null}
                             },
       energyData_car:
                             {
-                              labels: ['Electric car'],
-                              country: {data: null, label: 'Switzerland'},
-                              canton:  {data: null, label: 'canton'},
-                              commune: {data: null, label: 'commune'}
+                              labels: ['Electric Car', 'Electric Car National Contribution','Electric Car Canton Contribution'],
+                              country: {data: null, label: 'Switzerland', population: 8606033},
+                              canton:  {data: null, label: 'canton', population: null},
+                              commune: {data: null, label: 'commune', population: null}
                             },
       energyData_heating:
                             {
-                              labels: ['Renewable heating'],
-                              country: {data: null, label: 'Switzerland'},
-                              canton:  {data: null, label: 'canton'},
-                              commune: {data: null, label: 'commune'}
+                              labels: ['Renewable Heating', 'Renewable Heating National Contribution','Electric Car Canton Contribution'],
+                              country: {data: null, label: 'Switzerland', population: 8606033},
+                              canton:  {data: null, label: 'canton', population: null},
+                              commune: {data: null, label: 'commune', population: null}
                             }
 
 
@@ -115,11 +117,10 @@ export default {
       if(this.not_valid_statistic(sol_pot_usage_most_recent))
         sol_pot_usage_most_recent = null
 
-
       return {
-              heating: {data: [ren_heat_share_most_recent],label: region.name},
-              solar: {data: [sol_pot_usage_most_recent],label: region.name},
-              electric_car: {data: [el_car_share_most_recent],label: region.name}
+              heating: {data: [ren_heat_share_most_recent],label: region.name, population: region.population},
+              solar: {data: [sol_pot_usage_most_recent],label: region.name, population: region.population},
+              electric_car: {data: [el_car_share_most_recent],label: region.name, population: region.population}
             }
     },
 
