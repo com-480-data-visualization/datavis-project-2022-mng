@@ -1,10 +1,14 @@
 <template>
   <v-app id="app">
     <HelloWorld/>
-    <Map/>
+    <Map style="margin-bottom: 75px"/>
+    <div class="center-screen">Text about timeseries</div>
+    <span style="margin: 50px 0px"/>
     <TimeSeries :data-energies="energyData_car" type="Electric car share"/>
     <TimeSeries :data-energies="energyData_solar" type="Solar panel share"/>
     <TimeSeries :data-energies="energyData_heating" type="Renewable heating usage"/>
+    <div class="center-screen">Text about Heatmap</div>
+    <span style="margin: 50px 0px"/>
     <HeatMap/>
     <v-footer
         dark
@@ -80,7 +84,7 @@ export default {
       this.timeSeriesValues.features.forEach((item) =>
       {
         return arr_to_pass.push({'name':item.properties.name,
-          'data': item.properties[which_energy].split(" ").map(parseFloat),'timeline': item.properties["energyreporter_date"].split(" ")})
+          'data': item.properties[which_energy].split(" ").map(x=>parseFloat(x)*100),'timeline': item.properties["energyreporter_date"].split(" ")})
       })
 
       return arr_to_pass
@@ -96,5 +100,13 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #31502c;
   font-size: 1.25rem;
+}
+.center-screen {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

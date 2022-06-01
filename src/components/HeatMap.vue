@@ -105,7 +105,7 @@ export default {
           .attr("text-anchor", "middle")
           .attr("dy", ".35em")
           .text(function(d) {
-            return d.properties.name.slice(0,2);
+            return d.properties.abbreviation;
           });
 
     }

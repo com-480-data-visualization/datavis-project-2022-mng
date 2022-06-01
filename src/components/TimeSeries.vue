@@ -4,16 +4,16 @@
     <apexchart ref="realtimeChart" type="line" :height="height" :width="width" :options="chartOptions" :series="series"></apexchart>
     </v-col>
     <v-col>
-    <v-row>
-    <v-btn @click="hideAllSeries" block>Show all</v-btn>
-    <v-btn @click="showMainSeries" block>One per region</v-btn>
-    </v-row>
+      <v-row>
+        <v-btn @click="hideAllSeries" block small>Show all</v-btn>
+        <v-btn @click="showMainSeries" block small>One per region</v-btn>
+      </v-row>
     </v-col>
   </div>
 </template>
-
 <script>
 import VueApexCharts from 'vue-apexcharts'
+import * as d3 from "d3";
 export default {
   name: 'TimeSeries',
   components:{
@@ -37,7 +37,6 @@ export default {
       name_cantons: this.dataEnergies.map((x) => x.name).sort(),
       time_series_values: null,
       series: this.dataEnergies,
-        colors: ['#775DD0', '#546E7A', '#26a69a', '#D10CE8'],
       chartOptions: {
         chart: {
           height: 350,
@@ -48,16 +47,20 @@ export default {
           toolbar:{
             show:false
           },
-          animations: {
-            enabled: false,
-          },
         },
         dataLabels: {
           enabled: false
         },
+        colors: ["#FED842",'#FC6835','#FFED7D','#30FF40',
+          "#38FFE9", "#4C72FF","#B24DFF","#ACFF83",
+          "#25D3FF", "#FB001A","#5141FF",'#5000FF',
+          '#FC6F37', '#28FF80','#0800FF',"#BEE7FF",
+          "#FEFF0B",'#F44336', '#E91E63', '#9C27B0',
+          "#0F750E","#247072","#713D33","#726D30",
+          "#FDA9FE","#65FF07"],
         stroke: {
           curve: 'straight',
-          width:0.5,
+          width:0.8,
         },
         title: {
           text: this.type,
@@ -71,7 +74,19 @@ export default {
         },
         xaxis: {
           categories: this.dataEnergies[0].timeline,
-        }
+        },
+        /*yaxis:{
+          labels:{
+            formatter: function(value){
+              if(value == null){
+              return value.toFixed(2) + '%';
+              }
+              else{
+                return null
+              }
+            }
+          }
+        }*/
       },
     }
   },
@@ -99,8 +114,8 @@ export default {
       const initial_cantons = ["Ticino","Zurich","Vaud"]
       let to_keep = this.dataEnergies.filter(item => !(initial_cantons.includes(item.name))).map(x=>x.name)
       to_keep.forEach((x) => this.$refs.realtimeChart.hideSeries(x))
-    }
-  }
+    },
+  },
 }
 </script>
 
