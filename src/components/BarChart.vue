@@ -12,19 +12,18 @@
   />
 </template> -->
 <template>
-  <Bar :chart-data="chartData" :chart-options="chartOptions" :width="width" :height="height" />
+  <apexchart ref="realtimeChart" type="bar" :width="width" :height="height" :options="chartOptions" :series="chartData"></apexchart>
 </template>
 
 
 
 <script>
-import { Bar } from 'vue-chartjs/legacy'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+import VueApexCharts from 'vue-apexcharts'
 export default {
   name: 'BarChart',
-  components: {Bar},
+  components: {
+    apexchart: VueApexCharts,
+  },
   props:{
     'dataEnergies': Object,
     'width': {
@@ -34,49 +33,120 @@ export default {
     'height': {
       type: Number,
       default: 400
+    },
+    'title':{
+      default: 'Title',
+      type: String
+    },
+    'logarithmic':{
+      default: false,
+      type: Boolean
+    },
+    cssClasses: {
+      default: '',
+      type: String
+    },
+    styles: {
+      type: Object,
+      default: () => {}
+    },
+    plugins: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  data(){
+    return {
+      series: [{
+            name: this.dataEnergies.country.label,
+            data: [this.dataEnergies.country.data === null ? null : this.dataEnergies.country.data[0]*100,
+                                    this.dataEnergies.country.data === null ? null : this.dataEnergies.country.data[0]*100,
+                                     null]
+          }],
+          chartOptions: {
+            title:{
+              text: this.title,
+              align: 'center',
+              style: {
+                fontSize:  '10px',
+                fontWeight:  'bold',
+                fontFamily:  undefined,
+                color:  '#263238'
+              },
+            },
+            chart: {
+              type: 'bar',
+              toolbar:{
+                show: false
+              }
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+              },
+            },
+            dataLabels: {
+              enabled: false
+            },
+            stroke: {
+              show: true,
+              width: 2,
+              colors: ['transparent']
+            },
+            xaxis: {
+              categories: this.dataEnergies.labels,
+            },
+            yaxis: {
+              title: {
+                text: 'percentage (%)'
+              },
+              labels: {
+                  formatter: function (value) {
+                    return value.toFixed(0) + "%";
+                  }
+              },
+              logarithmic: this.logarithmic
+            },
+            fill: {
+              opacity: 1
+            },
+            tooltip: {
+              y: {
+                formatter: function (val) {
+                  return val.toFixed(2) + " %"
+                }
+              }
+            }
+          }
+          
+          
+        }
+    },
+  methods:{
+    reformatData(data){
+      return [{
+                name: this.dataEnergies.country.label,
+                data: this.dataEnergies.country.data.map(x => x == null ? null: x*100)
+              },
+              {
+                name: this.dataEnergies.canton.label,
+                data: this.dataEnergies.canton.data.map(x => x == null ?  null: x*100)
+              },
+              {
+                name: this.dataEnergies.commune.label,
+                data: this.dataEnergies.commune.data.map(x => x == null ? null: x*100)
+              }]
     }
   },
   computed: {
-    chartData() {
-      return {
-              labels:  this.dataEnergies.labels ,
-              datasets: [ 
-                            { data: [this.dataEnergies.country.data === null ? null : this.dataEnergies.country.data[0]*100,
-                                    this.dataEnergies.country.data === null ? null : this.dataEnergies.country.data[0]*100,
-                                     null],
-                              backgroundColor: '#7272FE',
-                              label: this.dataEnergies.country.label
-                            },
-                            { data: [(this.dataEnergies.canton.data === null ?
-                                        null :
-                                        this.dataEnergies.canton.data[0]*100),
-                                     (this.dataEnergies.canton.data === null  ?
-                                        null :
-                                        this.dataEnergies.canton.data[0]*this.dataEnergies.canton.population/this.dataEnergies.country.population*100),
-                                     (this.dataEnergies.canton.data === null ? null : this.dataEnergies.canton.data[0]*100)],
-                              backgroundColor: '#98fb98',
-                              label: this.dataEnergies.canton.label
-                            },
-                            { data: [ (this.dataEnergies.commune.data === null ? 
-                                        null :
-                                        this.dataEnergies.commune.data[0]*100),
-                                      null,
-                                      (this.dataEnergies.commune.data === null && this.dataEnergies.commune.population === null?
-                                        null :
-                                        this.dataEnergies.commune.data[0] * this.dataEnergies.commune.population/this.dataEnergies.canton.population)*100],
-                              backgroundColor: '#fd5e53',
-                              label: this.dataEnergies.commune.label
-                            }
-                         ]
-            }
-      },
-    chartOptions() {
-      return {
-        chartOptions: {responsive: true}
-      }
+    chartData(){
+      return  this.reformatData(this.dataEnergies)
     }
   }
 }
+
 </script>
 
 <style scoped>

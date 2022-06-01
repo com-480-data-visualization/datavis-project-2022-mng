@@ -20,6 +20,7 @@ def merge_canton_datasets(cantons_geo,df_canton,pop_canton):
         cantons_geo['features'][i]['properties']['renewable_heating_share'] = ' '.join(str(x) for x in data_en['renewable_heating_share'])
         cantons_geo['features'][i]['properties']['solar_potential_usage'] = ' '.join(str(x) for x in data_en['solar_potential_usage'])
         cantons_geo['features'][i]['properties']['renewable_heating_share_coverage'] = ' '.join(str(x) for x in data_en['renewable_heating_share_coverage'])
+        cantons_geo['features'][i]['properties']['abbreviation'] = data_en['canton']
         
         cantons_geo['features'][i]['properties']['population'] = str(data_pop['pop'])
     return cantons_geo
@@ -38,6 +39,7 @@ def merge_communes_datasets(communes_geo,df_communes,pop_commune):
             communes_geo['features'][i]['properties']['renewable_heating_share'] = ' '.join(str(x) for x in data['renewable_heating_share'])
             communes_geo['features'][i]['properties']['solar_potential_usage'] = ' '.join(str(x) for x in data['solar_potential_usage'])
             communes_geo['features'][i]['properties']['renewable_heating_share_coverage'] = ' '.join(str(x) for x in data['renewable_heating_share_coverage'])
+            
         else:
             communes_geo['features'][i]['properties']['energyreporter_date'] = 'null'
             communes_geo['features'][i]['properties']['electric_car_share'] = 'null'

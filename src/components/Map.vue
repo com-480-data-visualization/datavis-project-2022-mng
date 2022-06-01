@@ -2,6 +2,23 @@
 
 <template>
   <div>
+    <div class="in-center">
+    <ul  v-if="energyData_solar.canton.label == 'canton'">
+        <li class="list-region"> <strong>Country: </strong> {{'Switzerland'}} </li> 
+        <li class="list-region"><strong> | Hovered Region: </strong> {{province.name}} </li>
+    </ul>
+    <ul  v-else-if="energyData_solar.commune.label != 'commune'">
+        <li class="list-region"> <strong>Country: </strong>{{'Switzerland'}} </li> 
+        <li class="list-region"> <strong>Canton: </strong>{{energyData_solar.canton.label}} </li>
+        <li class="list-region"> <strong>Commune: </strong>{{energyData_solar.commune.label}} </li>
+        <li class="list-region"> <strong> | Hovered Region: </strong>{{province.name}} </li>
+    </ul>
+    <ul v-else>
+        <li class="list-region"> <strong>Country: </strong>{{'Switzerland'}} </li> 
+        <li class="list-region"> <strong>Canton: </strong>{{energyData_solar.canton.label}} </li>
+        <li class="list-region"> <strong> | Hovered Region: </strong>{{province.name}} </li>
+    </ul>
+    </div>
     <div class="center-screen" id="main-div">
       <div
           class="map-div"
@@ -9,12 +26,15 @@
       </div>
       <div  class="province-info">
         <h3 class="text-center">{{currentProvince.state}}</h3>
-        <ul>
-          <li>Informations: {{province.name}}</li>
-        </ul>
-        <BarChart :dataEnergies="energyData_solar" :width=500 :height=170 ></BarChart>
-        <BarChart :dataEnergies="energyData_heating" :width=500 :height=170></BarChart>
-        <BarChart :dataEnergies="energyData_car" :width=500 :height=170></BarChart>
+        <BarChart :dataEnergies="energyData_solar" :width=250 :height=150 title='Solar Potential Usage' ></BarChart>
+        <BarChart :dataEnergies="energyData_heating" :width=250 :height=150 title="Renewable Heating Share"></BarChart>
+        <BarChart :dataEnergies="energyData_car" :width=250 :height=150 title="Electric Car Share"></BarChart>
+      </div>
+      <div  class="province-info">
+        <h3 class="text-center">{{currentProvince.state}}</h3>
+        <BarChart :dataEnergies="calculatePercentageContribution(energyData_solar)" :width=300 :height=150 title='Solar Potential Usage Relative Contribution (log scale)' :logarithmic=true></BarChart>
+        <BarChart :dataEnergies="calculatePercentageContribution(energyData_heating)" :width=300 :height=150 title="Renewable Heating Share Relative Contribution (log scale)" :logarithmic=true></BarChart>
+        <BarChart :dataEnergies="calculatePercentageContribution(energyData_car)" :width=300 :height=150 title="Electric Car Share Relative Contribution (log scale)" :logarithmic=true></BarChart>
       </div>
     </div>
     <br><br>
@@ -46,15 +66,15 @@ export default {
       Taiwan,
       cantons: topojson.feature(json,json.objects.cantons),
       communes: topojson.feature(json2,json2.objects.communes),
-      province: {name: 'Switzerland'},
+      province: {name: ''},
       currentProvince: {name: 'Switzerland'},
       default_canton_energy_data : {
-                                      data: null,
+                                      data: [null],
                                       population: null,
                                       label: 'canton'
                                     },
       default_commune_energy_data: {
-                                      data: null,
+                                      data: [null],
                                       population: null,
                                       label: 'commune'
                                     },
@@ -65,24 +85,24 @@ export default {
                                     },
 
       energyData_solar:  {
-                              labels: ['Solar Potential usage', 'Solar potential National Contribution','Solar Potential Canton Contribution'],
-                              country: {data: null, label: 'Switzerland', population: 8606033},
-                              canton:  {data: null, label: 'canton', population: null},
-                              commune: {data: null, label: 'commune', population: null}
+                              labels: [''],
+                              country: {data:  [null], label: 'Switzerland', population: 8606033},
+                              canton:  {data:  [null], label: 'canton', population: null},
+                              commune: {data:  [null], label: 'commune', population: null}
                             },
       energyData_car:
                             {
-                              labels: ['Electric Car', 'Electric Car National Contribution','Electric Car Canton Contribution'],
-                              country: {data: null, label: 'Switzerland', population: 8606033},
-                              canton:  {data: null, label: 'canton', population: null},
-                              commune: {data: null, label: 'commune', population: null}
+                              labels: [''],
+                              country: {data:  [null], label: 'Switzerland', population: 8606033},
+                              canton:  {data:  [null], label: 'canton', population: null},
+                              commune: {data:  [null], label: 'commune', population: null}
                             },
       energyData_heating:
                             {
-                              labels: ['Renewable Heating', 'Renewable Heating National Contribution','Electric Car Canton Contribution'],
-                              country: {data: null, label: 'Switzerland', population: 8606033},
-                              canton:  {data: null, label: 'canton', population: null},
-                              commune: {data: null, label: 'commune', population: null}
+                              labels: [''],
+                              country: {data:  [null], label: 'Switzerland', population: 8606033},
+                              canton:  {data:  [null], label: 'canton', population: null},
+                              commune: {data:  [null], label: 'commune', population: null}
                             }
 
 
@@ -92,6 +112,34 @@ export default {
   created() {
   },
   methods:{
+    calculatePercentageContribution(dataset){
+      return {
+        labels: ['Swiss %','Canton %'].map(x => dataset.labels[0]+ ' ' + x),
+        country: {data: [1 , null], label: dataset.country.label, population: dataset.country.population},
+        canton: {
+          data: [
+                  (dataset.canton.data[0] === null  ?
+                      null :
+                      dataset.canton.data[0] * dataset.canton.population / (dataset.country.population * dataset.country.data[0])),
+                  dataset.canton.data[0] === null ? null : 1
+                  ],
+          label: dataset.canton.label,
+          population: dataset.canton.population
+        },
+        commune: {
+          data: [
+                  (dataset.commune.data[0] === null  ?
+                      null :
+                      dataset.commune.data[0] * dataset.commune.population / (dataset.country.population * dataset.country.data[0])),
+                  (dataset.commune.data[0] === null  ?
+                      null :
+                      dataset.commune.data[0] * dataset.commune.population / (dataset.canton.population * dataset.canton.data[0]))
+                ],
+          label: dataset.commune.label,
+          population: dataset.commune.population
+        }
+      }
+    },
     selectProvince(province) {
       this.province = province;
     },
@@ -99,7 +147,7 @@ export default {
       this.currentProvince = province;
     },
     closeInfo() {
-      this.currentProvince = 'Switzerland';
+      this.currentProvince = '';
     },
     not_valid_statistic(stat){
       return stat == 'null'
@@ -166,8 +214,8 @@ export default {
 
     createSvg(){
 
-      const width=750
-      const rect_width = 900
+      const width=600
+      const rect_width = width *900/700
       const [minX, minY, maxX, maxY] = bbox(this.cantons);
 
       // calculate aspect ratio and derive height
@@ -200,7 +248,7 @@ export default {
       const canton_stroke = "rgb(0,0,0)"//black !!!! colors must be in rgb and not just name of color (to compare colors)
       const commune_stroke = "rgb(0,0,0)" //black !!!! colors must be in rgb and not just name of color (to compare colors)
       const canton_stroke_width = 1
-      const commune_stroke_width = 1
+      const commune_stroke_width = 0.5
       const canton_color_mouse_on = "rgb(144,238,144)" // !!!! colors must be in rgb and not just name of color (to compare colors)
       const commune_color_mouse_on = "rgb(255,204,153)" // !!!! colors must be in rgb and not just name of color (to compare colors)
       const commune_selected_color_mouse_on = "rgb(255,105,97)" // !!!! colors must be in rgb and not just name of color (to compare colors)
@@ -254,10 +302,9 @@ export default {
             // gives me the correct values
             this.style.fill =  canton_color_mouse_on;
             that.selectProvince(d.properties);
-            //that.selectProvince(d.properties)
           })
           .on('mouseout', function () {
-            that.selectProvince({name: 'Switzerland'});
+            that.selectProvince({name: ''});
             // Reset province color
             this.style.fill = canton_color
           })
@@ -289,7 +336,7 @@ export default {
             //that.selectProvince(d.properties)
           })
           .on('mouseout', function () {
-            that.selectProvince({name: 'Switzerland'});
+            that.selectProvince({name: ''});
             // Reset province color
 
 
@@ -321,7 +368,7 @@ export default {
 
         //let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
         let [[min_x_coord,min_y_coord],[max_x_coord,max_y_coord]] = path.bounds(d)
-
+      
         // Compute centroid of the selected path
         if (d) {
           var centroid = path.centroid(d);
@@ -333,7 +380,7 @@ export default {
           var scale_y = size.height / Math.abs(max_y_coord - min_y_coord)
 
           k =  scale_x < scale_y ? scale_x : scale_y;
-          k = k - 0.5
+          k = k * 0.75
 
           if (canton_zoom){
             current_canton_info.zoom_info = {tx: x, ty:y, scale: k}
@@ -383,7 +430,6 @@ export default {
 
       function clickedCanton(e,d) {
         if(! current_canton_info.canton_selected){
-          console.log('hi')
           svg.selectAll(".communes")
               .attr("hidden",true)
               .style('fill', commune_color);
@@ -408,7 +454,6 @@ export default {
           zoom_to_region(d,zoom_translation_to_map_center,true)
         }
         else{
-          console.log('lds')
           svg.selectAll(".communes")
               .attr("hidden",true)
           svg.selectAll(".cantons")
@@ -456,8 +501,6 @@ export default {
   align-items: flex-start;
   text-align: center;
   column-gap: 40px;
-  max-width: 1000px; /* or whatever width you want. */
-  max-height: 1000px; /* or whatever width you want. */
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
@@ -467,7 +510,6 @@ export default {
   justify-content: center;
   align-items: flex-start;
   text-align: center;
-  column-gap: 40px;
   width: 1400px;
   height: 1000px;
   max-width: 2000px;
@@ -478,13 +520,29 @@ export default {
   overflow: hidden;
 }
 
+.in-center{
+  display: flex;
+  justify-content: left;
+  align-items: flex-start;
+  text-align: center;
+  column-gap: 40px;
+  width: 1000px;
+  height: 30px;
+ /* or whatever width you want. */
+  margin-right: auto;
+
+}
+
+
 .province-info {
   margin-left: auto;
   order: 2;
   background: #F5F5F7;
-  padding: 10px;
+  padding: 5px;
 }
-.pie-info{
-  width: 450px;
+.list-region{
+  display: inline;
+  padding-left: 0px;
 }
+
 </style>
