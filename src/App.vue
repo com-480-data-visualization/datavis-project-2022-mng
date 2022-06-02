@@ -13,7 +13,7 @@
     <HelloWorld/>
     <Map/>
     <div id="timeseries" style="margin-right: auto; margin-left: auto; padding: 80px 15px 75px; max-width: 850px;">
-      INFO REGARDING TimeseriesThis map is supposed to serve as a visualisation of the current suistanability situation in Switzerland
+      INFO REGARDING Timeseries
     </div>
 
     <span style="margin: 50px 0px"/>
@@ -21,10 +21,15 @@
     <TimeSeries :data-energies="energyData_solar" type="Solar panel share"/>
     <TimeSeries :data-energies="energyData_heating" type="Renewable heating usage"/>
 
-    <div id="heatmaps" style="margin-right: auto; margin-left: auto; padding: 80px 15px 75px; max-width: 850px;">
-    INFO REGARDING HEATMAPThis map is supposed to serve as a visualisation of the current suistanability situation in Switzerland
+    <div id="heatmaps" style="word-wrap: break-word;margin-right: auto; margin-left: auto; padding: 80px 15px 75px; max-width: 850px">
+    INFO REGARDING the how we do the this because the this tho who boh u does who oh we have boh to  HEATMAPRHUIISDFHIIDFPHSGHDSUÜDHDSUIÖJLKHDSIUGHLJKRWLIUDFSHJKGEWRLIUDFJLKDBGIEUGF
+      DJLKBGIRELKDFGIUERJKDFGERHKDFGITREHJKGFDBGRÖETJKBDFHGRTEDFGKHSÖRETJ
     </div>
     <HeatMap/>
+    <div style="word-wrap: break-word;margin-right: auto; margin-left: auto; padding: 0px 15px 75px; max-width: 850px">
+      INFO REGARDING the how we do the this because the this tho who boh u does who oh we have boh to  HEATMAPRHUIISDFHIIDFPHSGHDSUÜDHDSUIÖJLKHDSIUGHLJKRWLIUDFSHJKGEWRLIUDFJLKDBGIEUGF
+      DJLKBGIRELKDFGIUERJKDFGERHKDFGITREHJKGFDBGRÖETJKBDFHGRTEDFGKHSÖRETJ
+    </div>
     <v-footer
         dark
         padless
@@ -41,14 +46,14 @@
         <v-card-text class="white--text pt-0" style="text-align: center">
           <div style="display: inline-block;">
             <div style="font-style: italic;">Authors:<br></div>
-            <div style="text-align: left">Michael Roust<v-btn class="white--text" icon href="https://www.linkedin.com/in/michaelroust"><v-icon size="24px">{{linkedin}}</v-icon></v-btn>
-              <v-btn class="white--text" icon href="https://github.com/michaelroust"><v-icon size="24px">mdi-github</v-icon></v-btn>
-              <br></div>
             <div style="text-align: left">Nicolas Baldwin<v-btn class="white--text" icon href="https://www.linkedin.com/in/nicolas-baldwin-75832017b/"><v-icon size="24px">{{linkedin}}</v-icon></v-btn>
               <v-btn class="white--text" icon href="https://github.com/chabala98"><v-icon size="24px">mdi-github</v-icon></v-btn>
               <br></div>
             <div style="text-align: left">Gioele Monopoli<v-btn class="white--text" icon href="https://www.linkedin.com/in/gioele-monopoli"><v-icon size="24px">{{linkedin}}</v-icon></v-btn>
               <v-btn class="white--text" icon href="https://github.com/ogimgio"><v-icon size="24px">mdi-github</v-icon></v-btn>
+              <br></div>
+            <div style="text-align: left">Michael Roust<v-btn class="white--text" icon href="https://www.linkedin.com/in/michaelroust"><v-icon size="24px">{{linkedin}}</v-icon></v-btn>
+              <v-btn class="white--text" icon href="https://github.com/michaelroust"><v-icon size="24px">mdi-github</v-icon></v-btn>
               <br></div>
           </div>
         </v-card-text>
