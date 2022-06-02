@@ -23,7 +23,7 @@ mapHelpers.commune_stroke_width = 0.5
 mapHelpers.canton_color_mouse_on = "rgb(144,238,144)" // !!!! colors must be in rgb and not just name of color (to compare colors)
 mapHelpers.commune_color_mouse_on = "rgb(255,204,153)" // !!!! colors must be in rgb and not just name of color (to compare colors)
 mapHelpers.commune_selected_color_mouse_on = "rgb(255,105,97)" // !!!! colors must be in rgb and not just name of color (to compare colors)
-mapHelpers.rect_background_color = "#042800"
+mapHelpers.rect_background_color = "#ffffff"
 
 //
 

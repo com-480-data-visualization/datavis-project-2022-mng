@@ -17,7 +17,7 @@
         <li class="list-region"> <strong> | Hovered Region: </strong>{{province.name}} </li>
     </ul>
     </div>
-    <div class="center-screen" id="main-div">
+    <div class="center-screen" id="main-div" style="border-color: black;border-style: solid;border-width: thin;">
       <div
           class="map-div"
           id='chart' >
@@ -62,7 +62,7 @@ export default {
       //communes data
       communes: topojson.feature(json2,json2.objects.communes),
       province: {name: ''},
-  
+
       currentProvince: {name: 'Switzerland'},
 
       default_canton_energy_data : {
@@ -125,9 +125,9 @@ export default {
   },
 
   methods:{
- 
+
     /*
-      Function that creates the map and defines all its possible interactions 
+      Function that creates the map and defines all its possible interactions
     */
     createSvg(){
 
@@ -159,7 +159,7 @@ export default {
           //get the bounding box of the region
           let [[min_x_coord,min_y_coord],[max_x_coord,max_y_coord]] = path.bounds(d)
 
-          
+
           if (d) {
             // Compute centroid of the region
             var centroid = path.centroid(d);
@@ -297,7 +297,7 @@ export default {
       const height = ((maxY - minY) / (maxX - minX)) * mapHelpers.width;
       //rectangle around swiss map
       const rect_height = ((maxY - minY) / (maxX - minX)) * mapHelpers.rect_width;
-   
+
       const delta_width = mapHelpers.rect_width - mapHelpers.width
       const delta_height = rect_height - height
 
@@ -305,12 +305,12 @@ export default {
         height: rect_height,
         width: mapHelpers.rect_width,
       };
-     
+
       //change size of div
       document.getElementById('chart').style.width = mapHelpers.rect_width+"px";
       document.getElementById('chart').style.height = mapHelpers.rect_width+"px";
       document.getElementById('main-div').style.maxHeight = rect_height+"px";
-      
+
       //functions used to project coordinates of data onto map
       const x = d3.scaleLinear()
           .range([delta_width/2, delta_width/2 + mapHelpers.width])
@@ -346,7 +346,7 @@ export default {
         .attr("y", 0)
         .attr("width", mapHelpers.rect_width)
         .attr("height", rect_height)
-        .attr("fill", mapHelpers.rect_background_color)
+     . attr("fill", mapHelpers.rect_background_color)
         .on('click', clickedBox);
 
       //draw swiss canton and define interactions
@@ -436,7 +436,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
-  
+
 }
 .center-screen {
   display: flex;
