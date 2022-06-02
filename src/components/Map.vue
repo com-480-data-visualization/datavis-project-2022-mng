@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top:75px;padding-top: 75px" id="map">
+  <div style="margin-top:50px;padding-top: 50px" id="map">
     <div class="in-center">
     <ul  v-if="energyData_solar.canton.label === 'canton'">
         <li class="list-region"> <span style="font-weight: 900">Country: </span> {{'Switzerland'}} </li>

@@ -1,6 +1,6 @@
 <template>
   <div class="heatmap-div" >
-    <v-select style="width:400px;max-width: 400px; margin-bottom: 25px;" v-model="selected_option" :items="['Electric car','Solar potential','Renewable heating']" label="Feature to compare"/>
+    <v-select style="width:400px;max-width: 400px; margin-bottom: 25px;" v-model="selected_option" :items="['Electric car','Solar potential','Renewable heating']" label="Indicator to compare"/>
   <div id="heatmap"/>
   </div>
 </template>

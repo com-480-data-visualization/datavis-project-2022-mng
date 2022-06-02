@@ -13,22 +13,20 @@
     <HelloWorld/>
     <Map/>
     <div id="timeseries" style="margin-right: auto; margin-left: auto; padding: 80px 15px 75px; max-width: 850px;">
-      INFO REGARDING Timeseries
+      <h2>Timeseries data</h2><br>
+      Here you can explore how different cantons' 3 different metrics have evolved over time. Just select the cantons that interest you!
     </div>
-
-    <span style="margin: 50px 0px"/>
     <TimeSeries  :data-energies="energyData_car" type="Electric car share"/>
     <TimeSeries :data-energies="energyData_solar" type="Solar panel share"/>
     <TimeSeries :data-energies="energyData_heating" type="Renewable heating usage"/>
 
-    <div id="heatmaps" style="word-wrap: break-word;margin-right: auto; margin-left: auto; padding: 80px 15px 75px; max-width: 850px">
-    INFO REGARDING the how we do the this because the this tho who boh u does who oh we have boh to  HEATMAPRHUIISDFHIIDFPHSGHDSUÜDHDSUIÖJLKHDSIUGHLJKRWLIUDFSHJKGEWRLIUDFJLKDBGIEUGF
-      DJLKBGIRELKDFGIUERJKDFGERHKDFGITREHJKGFDBGRÖETJKBDFHGRTEDFGKHSÖRETJ
+    <div id="heatmaps" style="word-wrap: break-word;margin-right: auto; margin-left: auto; padding: 10px 15px 75px; max-width: 850px">
+      <h2>Heatmap</h2><br>
+      Summarizing all the above data is the map below! Clearly we can see Geneva is doing terribly at using renewable heating. Hopefully, they can improve. If you're from Geneva maybe have a chat new time you see the mayor &#128540;.
     </div>
     <HeatMap/>
     <div style="word-wrap: break-word;margin-right: auto; margin-left: auto; padding: 0px 15px 75px; max-width: 850px">
-      INFO REGARDING the how we do the this because the this tho who boh u does who oh we have boh to  HEATMAPRHUIISDFHIIDFPHSGHDSUÜDHDSUIÖJLKHDSIUGHLJKRWLIUDFSHJKGEWRLIUDFJLKDBGIEUGF
-      DJLKBGIRELKDFGIUERJKDFGERHKDFGITREHJKGFDBGRÖETJKBDFHGRTEDFGKHSÖRETJ
+      We hope this website has given you a better understanding of how Switzerland is doing at sustainability and hope it will encourage you to contribute to Switzerland's sustainability!
     </div>
     <v-footer
         dark
