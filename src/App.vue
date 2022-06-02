@@ -2,12 +2,18 @@
   <v-app id="app">
     <HelloWorld/>
     <Map style="margin-bottom: 75px"/>
-    <div class="center-screen">Text about timeseries</div>
+    <div style="margin-right: auto; margin-left: auto; padding: 50px 15px 75px; max-width: 850px;">
+      INFO REGARDING TimeseriesThis map is supposed to serve as a visualisation of the current suistanability situation in Switzerland
+    </div>
+
     <span style="margin: 50px 0px"/>
     <TimeSeries :data-energies="energyData_car" type="Electric car share"/>
     <TimeSeries :data-energies="energyData_solar" type="Solar panel share"/>
     <TimeSeries :data-energies="energyData_heating" type="Renewable heating usage"/>
-    <div class="center-screen">Text about Heatmap</div>
+
+    <div style="margin-right: auto; margin-left: auto; padding: 50px 15px 75px; max-width: 850px;">
+    INFO REGARDING HEATMAPThis map is supposed to serve as a visualisation of the current suistanability situation in Switzerland
+    </div>
     <span style="margin: 50px 0px"/>
     <HeatMap/>
     <v-footer
@@ -84,7 +90,7 @@ export default {
       this.timeSeriesValues.features.forEach((item) =>
       {
         return arr_to_pass.push({'name':item.properties.name,
-          'data': item.properties[which_energy].split(" ").map(x=>parseFloat(x)*100),'timeline': item.properties["energyreporter_date"].split(" ")})
+          'data': item.properties[which_energy].split(" ").map(x=>(parseFloat(x)*100).toFixed(2)),'timeline': item.properties["energyreporter_date"].split(" ")})
       })
 
       return arr_to_pass
@@ -105,8 +111,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  text-align: center;
   margin-left: auto;
   margin-right: auto;
+  text-align: center;
+  padding: 50px 15px 75px;
+  max-width: 850px;
 }
 </style>

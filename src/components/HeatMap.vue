@@ -1,7 +1,7 @@
 <template>
   <div class="heatmap-div" >
-    <v-select v-model="selected_option" :items="['Electric car','Solar potential','Renewable heating']" label="What to compare"/>
-  <div class="heatmap-div" id="heatmap"/>
+    <v-select style="width:400px;max-width: 400px; margin-bottom: 25px;" v-model="selected_option" :items="['Electric car','Solar potential','Renewable heating']" label="Feature to compare"/>
+  <div id="heatmap"/>
   </div>
 </template>
 
@@ -10,6 +10,8 @@ import * as d3 from "d3";
 import json from '../data/cantons.topo.json';
 import * as topojson from "topojson-client";
 import bbox from "@turf/bbox";
+import legend from 'd3-svg-legend'
+import { legendColor } from 'd3-svg-legend'
 
 export default {
   name: "HeatMap",
@@ -53,7 +55,7 @@ export default {
       const canton_stroke_width = 0.2
       const canton_stroke = "rgb(0,0,0)"
       const path = d3.geoPath().projection(projection);
-      var colorScale = d3.scaleSequential(d3.interpolateGreens)
+      var colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
       if(selected_option === "Electric car"){
         colorScale = colorScale.domain([0,0.03])
       }
@@ -90,7 +92,7 @@ export default {
             var energy_recent_value = parseFloat(energy_array[energy_array.length - 1])
             console.log(d.properties.solar_potential_usage.split(" ").length)
             return colorScale(energy_recent_value);
-          });
+          })
       svg.append("g")
           .selectAll("text")
           .data(this.cantons.features)
@@ -108,6 +110,26 @@ export default {
             return d.properties.abbreviation;
           });
 
+      // Legend
+      var g = svg.append("g")
+          .attr("class", "legendThreshold")
+          .attr("transform", "translate(20,70)");
+      g.append("text")
+          .attr("class", "caption")
+          .attr("x", 0)
+          .attr("y", -10)
+          .text("% Per Canton");
+      var labels = ['Low', '1-5', '6-10', 'boh','High'];
+      var legend = legendColor()
+          .labels(function (d) {
+            if(labels[0] === labels[d.i] || labels[labels.length - 1] === labels[d.i]){
+              return labels[d.i]
+            }})
+          .shapePadding(1)
+          .scale(colorScale);
+      svg.select(".legendThreshold")
+          .style("font-size", "14px")
+          .call(legend);
     }
   },
   mounted(){
@@ -124,9 +146,9 @@ export default {
   justify-content: center;
   align-items: flex-start;
   text-align: center;
-  column-gap: 40px;
-  max-width: 700px; /* or whatever width you want. */
+  max-width: 1000px; /* or whatever width you want. */
   max-height: 700px; /* or whatever width you want. */
+  margin-bottom: 100px;
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;

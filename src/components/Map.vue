@@ -3,18 +3,18 @@
 <template>
   <div>
     <div class="in-center">
-    <ul  v-if="energyData_solar.canton.label == 'canton'">
-        <li class="list-region"> <strong>Country: </strong> {{'Switzerland'}} </li> 
-        <li class="list-region"><strong> | Hovered Region: </strong> {{province.name}} </li>
+    <ul  v-if="energyData_solar.canton.label === 'canton'">
+        <li class="list-region"> <span style="font-weight: 900">Country: </span> {{'Switzerland'}} </li>
+        <li class="list-region"><span style="font-weight: 900"> | Hovered Region: </span> {{province.name}} </li>
     </ul>
-    <ul  v-else-if="energyData_solar.commune.label != 'commune'">
-        <li class="list-region"> <strong>Country: </strong>{{'Switzerland'}} </li> 
-        <li class="list-region"> <strong>Canton: </strong>{{energyData_solar.canton.label}} </li>
+    <ul  v-else-if="energyData_solar.commune.label !== 'commune'">
+        <li class="list-region"> <strong>Country: </strong>{{'Switzerland'}}, </li>
+        <li class="list-region"> <strong>Canton: </strong>{{energyData_solar.canton.label}}, </li>
         <li class="list-region"> <strong>Commune: </strong>{{energyData_solar.commune.label}} </li>
         <li class="list-region"> <strong> | Hovered Region: </strong>{{province.name}} </li>
     </ul>
     <ul v-else>
-        <li class="list-region"> <strong>Country: </strong>{{'Switzerland'}} </li> 
+        <li class="list-region"> <strong>Country: </strong>{{'Switzerland'}}, </li>
         <li class="list-region"> <strong>Canton: </strong>{{energyData_solar.canton.label}} </li>
         <li class="list-region"> <strong> | Hovered Region: </strong>{{province.name}} </li>
     </ul>
@@ -116,7 +116,7 @@ export default {
   },
   created() {
   },
- 
+
   methods:{
     calculatePercentageContribution(dataset){
       return {
@@ -201,13 +201,13 @@ export default {
         this.energyData_heating.canton = canton_data.heating
         this.energyData_car.canton = canton_data.electric_car
       }
-      
+
       this.energy_Data_heating_perc_contr = this.calculatePercentageContribution(this.energyData_heating)
 
       this.energyData_car_perc_contr = this.calculatePercentageContribution(this.energyData_car)
-   
+
       this.energyData_solar_perc_contr = this.calculatePercentageContribution(this.energyData_solar)
-  
+
 
     },
 
@@ -227,7 +227,7 @@ export default {
       this.energy_Data_heating_perc_contr = this.calculatePercentageContribution(this.energyData_heating)
 
       this.energyData_car_perc_contr = this.calculatePercentageContribution(this.energyData_car)
-   
+
       this.energyData_solar_perc_contr = this.calculatePercentageContribution(this.energyData_solar)
     },
 
@@ -387,7 +387,7 @@ export default {
 
         //let {max_x_coord,max_y_coord,min_x_coord,min_y_coord} = getBoundingBox(d)
         let [[min_x_coord,min_y_coord],[max_x_coord,max_y_coord]] = path.bounds(d)
-      
+
         // Compute centroid of the selected path
         if (d) {
           var centroid = path.centroid(d);
@@ -546,11 +546,10 @@ export default {
   display: flex;
   justify-content: left;
   align-items: flex-start;
-  text-align: center;
-  column-gap: 40px;
-  width: 1000px;
+  width: 1400px;
   height: 30px;
  /* or whatever width you want. */
+  margin-left: auto;
   margin-right: auto;
 
 }
