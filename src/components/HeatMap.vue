@@ -125,8 +125,8 @@ export default {
           .attr("class", "caption")
           .attr("x", 0)
           .attr("y", -10)
-          .text("% Per Canton");
-      var labels = ['Low', '1-5', '6-10', 'boh','High'];
+          .text("%");
+      var labels = ['Worst', '1-5', '6-10', 'boh','Best'];
       var legend = legendColor()
           .labels(function (d) {
             if(labels[0] === labels[d.i] || labels[labels.length - 1] === labels[d.i]){

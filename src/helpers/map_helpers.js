@@ -9,8 +9,8 @@ mapHelpers.swiss_car = 0.017949;
 mapHelpers.swiss_heating = 0.326350;
 
 //map dimensions
-mapHelpers.map_width = 600
-mapHelpers.rectangle_width = mapHelpers.map_width * 900 / 700
+mapHelpers.width = 600;
+mapHelpers.rect_width = mapHelpers.width * 900 / 700;
 
 //colors of map
 mapHelpers.canton_color = 'rgb(0,128,0)' //green !!!! colors must be in rgb and not just name of color (to compare colors)
@@ -26,10 +26,16 @@ mapHelpers.commune_selected_color_mouse_on = "rgb(255,105,97)" // !!!! colors mu
 mapHelpers.rect_background_color = "#042800"
 
 //
-mapHelpers.
 
-//functions
+
+// ################################FUNCTIONS###########################################
+
+/**
+    Calculate how much a canton contributes to the country's total statistic and how much a commune contributes to the canton's total statistic
+    * @param dataset data of statistic we are computing on
+*/
 mapHelpers.calculatePercentageContribution = (dataset) => {
+    console.log('labels', dataset.labels)
     return {
         labels: ['Swiss %', 'Canton %'].map(x => dataset.labels[0] + ' ' + x),
         country: { data: [1, null], label: dataset.country.label, population: dataset.country.population },
@@ -58,6 +64,7 @@ mapHelpers.calculatePercentageContribution = (dataset) => {
     }
 };
 
+
 mapHelpers.selectProvince = (that, province) => {
     that.province = province;
 };
@@ -67,12 +74,22 @@ mapHelpers.openInfo = (that, province) => {
 mapHelpers.closeInfo = (that) => {
     that.currentProvince = '';
 };
+/**
+    determines if a statistic is none or not
+*/
 mapHelpers.not_valid_statistic = (stat) => {
     return stat == 'null'
 };
+/**
+    gets the latest sustainability indicators of a region
+    @param region region we selected
+*/
 mapHelpers.get_latest_energy_data = (region) => {
+
+    //data is in a string and seperated in by ' '
     let electric_car_share_time_series = region.electric_car_share.split(' ')
 
+    //get latest indicator
     var el_car_share_most_recent = electric_car_share_time_series[electric_car_share_time_series.length - 1]
 
     //check if it's a valid statistic
@@ -80,16 +97,23 @@ mapHelpers.get_latest_energy_data = (region) => {
     if (mapHelpers.not_valid_statistic(el_car_share_most_recent))
         el_car_share_most_recent = null
 
+    //data is in a string and seperated in by ' '
     let renewable_heating_share_time_series = region.renewable_heating_share.split(' ')
+
+    //get latest indicator
     var ren_heat_share_most_recent = renewable_heating_share_time_series[renewable_heating_share_time_series.length - 1]
-        //check if it's a valid statistic
+
+    //check if it's a valid statistic
     if (mapHelpers.not_valid_statistic(ren_heat_share_most_recent))
         ren_heat_share_most_recent = null
 
-
+    //data is in a string and seperated in by ' '
     let solar_potential_usage_time_series = region.solar_potential_usage.split(' ')
+
+    //get latest indicator
     var sol_pot_usage_most_recent = solar_potential_usage_time_series[solar_potential_usage_time_series.length - 1]
-        //check if it's a valid statistic
+
+    //check if it's a valid statistic
     if (mapHelpers.not_valid_statistic(sol_pot_usage_most_recent))
         sol_pot_usage_most_recent = null
 
@@ -100,9 +124,13 @@ mapHelpers.get_latest_energy_data = (region) => {
     }
 }
 
+/**
+    change canton data given to bar plot
+    @param canton_data data we want to add
+*/
 mapHelpers.change_bar_plot_canton_data = (that, canton_data) => {
 
-    //change canton data on bar plot (if nothing is stated set everythin to null)
+    //change canton data on bar plot (if nothing is stated set everything to null)
     if (canton_data == null) {
         that.energyData_solar.canton = that.default_canton_energy_data
         that.energyData_heating.canton = that.default_canton_energy_data
@@ -120,8 +148,12 @@ mapHelpers.change_bar_plot_canton_data = (that, canton_data) => {
     that.energyData_solar_perc_contr = mapHelpers.calculatePercentageContribution(that.energyData_solar)
 }
 
+/**
+    change commune data given to bar plot
+    @param commune_data data we want to add
+*/
 mapHelpers.change_bar_plot_commune_data = (that, commune_data = null) => {
-
+    //change canton data on bar plot (if nothing is stated set everything to null)
     if (commune_data == null) {
         that.energyData_solar.commune = that.default_commune_energy_data
         that.energyData_heating.commune = that.default_commune_energy_data
@@ -132,12 +164,12 @@ mapHelpers.change_bar_plot_commune_data = (that, commune_data = null) => {
         that.energyData_car.commune = commune_data.electric_car
     }
 
-    that.energy_Data_heating_perc_contr = mapHelpers.calculatePercentageContribution(this.energyData_heating)
+    that.energy_Data_heating_perc_contr = mapHelpers.calculatePercentageContribution(that.energyData_heating)
 
-    that.energyData_car_perc_contr = mapHelpers.calculatePercentageContribution(this.energyData_car)
+    that.energyData_car_perc_contr = mapHelpers.calculatePercentageContribution(that.energyData_car)
 
-    that.energyData_solar_perc_contr = mapHelpers.calculatePercentageContribution(this.energyData_solar)
+    that.energyData_solar_perc_contr = mapHelpers.calculatePercentageContribution(that.energyData_solar)
 }
 
 
-export default helpers;
+export default mapHelpers;

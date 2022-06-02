@@ -103,8 +103,6 @@ export default {
       function myFunction(item) {
         return arr_1.push({'name': item,"data" : Array.from({length: 8}, () => Math.floor(Math.random() * 100))})
       }
-      //cantons_selected.forEach(myFunction)
-      //this.$refs.realtimeChart.updateSeries(arr_1, false, true);
       this.$refs.realtimeChart.hideSeries(cantons_selected)
     },
     hideAllSeries(){

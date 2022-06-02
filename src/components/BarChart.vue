@@ -87,6 +87,9 @@ export default {
                 endingShape: 'rounded'
               },
             },
+            legend: {
+              fontSize: "10px"
+            },
             dataLabels: {
               enabled: false
             },

@@ -10,7 +10,9 @@
       </div>
     </div>
     <HelloWorld/>
+    
     <Map style="margin-bottom: 75px"/>
+   
     <div style="margin-right: auto; margin-left: auto; padding: 50px 15px 75px; max-width: 850px;">
       INFO REGARDING TimeseriesThis map is supposed to serve as a visualisation of the current suistanability situation in Switzerland
     </div>
