@@ -13,6 +13,7 @@ import bbox from "@turf/bbox";
 import legend from 'd3-svg-legend'
 import { legendColor } from 'd3-svg-legend'
 
+
 export default {
   name: "HeatMap",
   data(){
@@ -56,17 +57,22 @@ export default {
       const canton_stroke = "rgb(0,0,0)"
       const path = d3.geoPath().projection(projection);
       var colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
+
+      let el_cs = null
       if(selected_option === "Electric car"){
-        
-        colorScale = colorScale.domain([0,0.03])
+        el_cs = this.cantons.features.map(x => x.properties.electric_car_share.split(' '))   
       }
       else if(selected_option === "Solar potential"){
-        colorScale = colorScale.domain([0,0.1])
+        el_cs = this.cantons.features.map(x => x.properties.solar_potential_usage.split(' '))  
       }
       //renewable energy
       else{
-        colorScale = colorScale.domain([0,1])
+        el_cs = this.cantons.features.map(x => x.properties.renewable_heating_share.split(' '))  
       }
+      const values = el_cs.map(x => x[x.length -1])
+      const min_val = Math.min.apply(Math, values)
+      const max_val = Math.max.apply(Math, values)
+      colorScale = colorScale.domain([min_val,max_val])
 
 
       svg.append("g")
