@@ -1,5 +1,14 @@
 <template>
   <v-app id="app">
+    <div class="header">
+      <div class="topnav">
+        <div class="topnav-right">
+          <a href="#map" onmouseover="this.style.color='black';" onmouseout="this.style.color='grey'" style="color:grey;">o</a>
+          <a href="#timeseries" onmouseover="this.style.color='black';" onmouseout="this.style.color='grey'" style="color:grey;">Exploration of results</a>
+          <a href="#heatmaps" onmouseover="this.style.color='black';" onmouseout="this.style.color='grey'" style="color:grey;">How can we use our model?</a>
+        </div>
+      </div>
+    </div>
     <HelloWorld/>
     <Map style="margin-bottom: 75px"/>
     <div style="margin-right: auto; margin-left: auto; padding: 50px 15px 75px; max-width: 850px;">
@@ -7,7 +16,7 @@
     </div>
 
     <span style="margin: 50px 0px"/>
-    <TimeSeries :data-energies="energyData_car" type="Electric car share"/>
+    <TimeSeries id="timeseries" :data-energies="energyData_car" type="Electric car share"/>
     <TimeSeries :data-energies="energyData_solar" type="Solar panel share"/>
     <TimeSeries :data-energies="energyData_heating" type="Renewable heating usage"/>
 
@@ -15,7 +24,7 @@
     INFO REGARDING HEATMAPThis map is supposed to serve as a visualisation of the current suistanability situation in Switzerland
     </div>
     <span style="margin: 50px 0px"/>
-    <HeatMap/>
+    <HeatMap id="heatmaps"/>
     <v-footer
         dark
         padless
@@ -85,6 +94,7 @@ export default {
     this.energyData_heating = this.createData("renewable_heating_share")
   },
   methods:{
+
     createData(which_energy){
       var arr_to_pass = []
       this.timeSeriesValues.features.forEach((item) =>
@@ -107,14 +117,58 @@ export default {
   color: #31502c;
   font-size: 1.25rem;
 }
-.center-screen {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  margin-left: auto;
-  margin-right: auto;
+.header {
+  position: fixed;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+  background-color: #31502c;
+}
+.progress-container {
+  width: 100%;
+  height: 8px;
+  background: #ccc;
+}
+.progress-bar {
+  height: 6px;
+  background: #31502c;
+  width: 0%;
+}
+.container {
+  position: relative;
   text-align: center;
-  padding: 50px 15px 75px;
-  max-width: 850px;
+  color: #31502c;
+  margin-bottom: 300px;
+}
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display:inline;
+}
+.first-letter {
+  font-size: 100px;
+  line-height: 70px;
+  font-weight: bold;
+}
+.topnav {
+  overflow: hidden;
+  background-color: white;
+}
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+/* Right-aligned section inside the top navigation */
+.topnav-right {
+  float: right;
+}
+ul {
+  margin: 0;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div style=" text-align: justify;">
-    <div class="col-12" ref="introduction" style="margin-right: auto;
+    <div style="margin-top:50px;margin-right: auto;
     margin-left: auto;padding: 50px 15px 75px;max-width: 850px;">
       <div style="text-align: center; font-style: italic;font-weight: bold">
         Interactive map of Switzerland</div><br><br>

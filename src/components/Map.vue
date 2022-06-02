@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <div class="in-center">
+    <div id="map" class="in-center">
     <ul  v-if="energyData_solar.canton.label === 'canton'">
         <li class="list-region"> <span style="font-weight: 900">Country: </span> {{'Switzerland'}} </li>
         <li class="list-region"><span style="font-weight: 900"> | Hovered Region: </span> {{province.name}} </li>
