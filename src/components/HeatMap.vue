@@ -60,14 +60,14 @@ export default {
 
       let el_cs = null
       if(selected_option === "Electric car"){
-        el_cs = this.cantons.features.map(x => x.properties.electric_car_share.split(' '))   
+        el_cs = this.cantons.features.map(x => x.properties.electric_car_share.split(' '))
       }
       else if(selected_option === "Solar potential"){
-        el_cs = this.cantons.features.map(x => x.properties.solar_potential_usage.split(' '))  
+        el_cs = this.cantons.features.map(x => x.properties.solar_potential_usage.split(' '))
       }
       //renewable energy
       else{
-        el_cs = this.cantons.features.map(x => x.properties.renewable_heating_share.split(' '))  
+        el_cs = this.cantons.features.map(x => x.properties.renewable_heating_share.split(' '))
       }
       const values = el_cs.map(x => x[x.length -1])
       const min_val = Math.min.apply(Math, values)
