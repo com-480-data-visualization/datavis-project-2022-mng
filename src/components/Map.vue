@@ -247,6 +247,7 @@ export default {
       document.getElementById('chart').style.width = rect_width+"px";
       document.getElementById('chart').style.height = rect_width+"px";
       document.getElementById('main-div').style.maxHeight = rect_height+"px";
+      
       const x = d3.scaleLinear()
           .range([delta_width/2, delta_width/2 + width])
           .domain([minX, maxX]);
@@ -483,24 +484,6 @@ export default {
           current_canton_info.canton_selected = false
         }
       }
-
-/*
-// Get province name length
-      function nameLength(d){
-        const n = nameFn(d);
-        return n ? n.length : 0;
-      }
-
-// Get province name
-      function nameFn(d){
-        return d && d.properties ? d.properties.name : null;
-      }
-
-// Get province color
-      function fillFn(d){
-        return color(nameLength(d));
-      }
-      */
     },
   },
   mounted(){

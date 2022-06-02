@@ -57,6 +57,7 @@ export default {
       const path = d3.geoPath().projection(projection);
       var colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
       if(selected_option === "Electric car"){
+        
         colorScale = colorScale.domain([0,0.03])
       }
       else if(selected_option === "Solar potential"){
