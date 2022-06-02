@@ -3,7 +3,7 @@
     <div style="margin-top:50px;margin-right: auto;
     margin-left: auto;padding: 50px 15px 0px;max-width: 850px;">
       <h1 style="font-size: 50px; text-align: center;color: #3b6b3b;text-transform: uppercase">
-        The interactive map of Switzerland</h1><br><br><br>
+        Interactive Swiss sustainability Map</h1><br><br><br>
       Around the world, countries are trying to reduce their CO2 emissions so that we, future generations and our planet can continue to live and exist without a terrible climate catastrophe. We must make efforts to make our lifestyles, our industries and our society sustainable. This starts with ourselves, our communities, our cantons and our country, Switzerland.<br><br>
 
       This website is serves to display the progress of Switzerland, its cantons and communes in 3 key sustainability metrics:<br>
