@@ -3,7 +3,7 @@
     <v-col>
     <apexchart ref="realtimeChart" type="line" :height="height" :width="width" :options="chartOptions" :series="series"></apexchart>
     </v-col>
-    <v-col>
+    <v-col style="margin-top: 60px">
       <v-row>
         <v-btn @click="hideAllSeries" block small>Show all</v-btn>
         <v-btn @click="showMainSeries" block small>One per region</v-btn>
@@ -75,18 +75,20 @@ export default {
         xaxis: {
           categories: this.dataEnergies[0].timeline,
         },
-        /*yaxis:{
-          labels:{
-            formatter: function(value){
-              if(value == null){
-              return value.toFixed(2) + '%';
-              }
-              else{
-                return null
-              }
-            }
-          }
-        }*/
+        yaxis:{
+          title: {
+            text: '%',
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              color: undefined,
+              fontSize: '12px',
+              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontWeight: 600,
+              cssClass: 'apexcharts-xaxis-title',
+            },
+          },
+        }
       },
     }
   },
@@ -122,10 +124,11 @@ export default {
 <style scoped>
 .center-screen {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: flex-start;
   text-align: center;
-  width: 1000px;
+  max-width: 1000px;
   height: 500px;
 
   /* or whatever width you want. */
