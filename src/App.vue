@@ -3,28 +3,28 @@
     <div class="header">
       <div class="topnav">
         <div class="topnav-right">
-          <a href="#map" onmouseover="this.style.color='black';" onmouseout="this.style.color='grey'" style="color:grey;">o</a>
-          <a href="#timeseries" onmouseover="this.style.color='black';" onmouseout="this.style.color='grey'" style="color:grey;">Exploration of results</a>
-          <a href="#heatmaps" onmouseover="this.style.color='black';" onmouseout="this.style.color='grey'" style="color:grey;">How can we use our model?</a>
+          <a href="#introduction" onmouseover="this.style.color='#3b6b3b';" onmouseout="this.style.color='grey'" style="font-weight:500;color:grey;text-transform: uppercase">Introduction</a>
+          <a href="#map" onmouseover="this.style.color='#3b6b3b';" onmouseout="this.style.color='grey'" style="font-weight:500;color:grey;text-transform: uppercase">The map</a>
+          <a href="#timeseries" onmouseover="this.style.color='#3b6b3b';" onmouseout="this.style.color='grey'" style="font-weight:500;color:grey;text-transform: uppercase">Timeseries</a>
+          <a href="#heatmaps" onmouseover="this.style.color='#3b6b3b';" onmouseout="this.style.color='grey'" style="font-weight:500;color:grey;text-transform: uppercase">Heatmap</a>
         </div>
       </div>
     </div>
     <HelloWorld/>
-    <Map style="margin-bottom: 75px"/>
-    <div style="margin-right: auto; margin-left: auto; padding: 50px 15px 75px; max-width: 850px;">
+    <Map/>
+    <div id="timeseries" style="margin-right: auto; margin-left: auto; padding: 80px 15px 75px; max-width: 850px;">
       INFO REGARDING TimeseriesThis map is supposed to serve as a visualisation of the current suistanability situation in Switzerland
     </div>
 
     <span style="margin: 50px 0px"/>
-    <TimeSeries id="timeseries" :data-energies="energyData_car" type="Electric car share"/>
+    <TimeSeries  :data-energies="energyData_car" type="Electric car share"/>
     <TimeSeries :data-energies="energyData_solar" type="Solar panel share"/>
     <TimeSeries :data-energies="energyData_heating" type="Renewable heating usage"/>
 
-    <div style="margin-right: auto; margin-left: auto; padding: 50px 15px 75px; max-width: 850px;">
+    <div id="heatmaps" style="margin-right: auto; margin-left: auto; padding: 80px 15px 75px; max-width: 850px;">
     INFO REGARDING HEATMAPThis map is supposed to serve as a visualisation of the current suistanability situation in Switzerland
     </div>
-    <span style="margin: 50px 0px"/>
-    <HeatMap id="heatmaps"/>
+    <HeatMap/>
     <v-footer
         dark
         padless
@@ -122,7 +122,6 @@ export default {
   top: 0;
   z-index: 1;
   width: 100%;
-  background-color: #31502c;
 }
 .progress-container {
   width: 100%;
@@ -155,6 +154,7 @@ export default {
 .topnav {
   overflow: hidden;
   background-color: white;
+  box-shadow: 0 2px 4px 0 #3b6b3b;
 }
 /* Style the links inside the navigation bar */
 .topnav a {

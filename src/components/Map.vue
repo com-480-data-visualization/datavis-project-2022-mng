@@ -1,8 +1,6 @@
-
-
 <template>
-  <div>
-    <div id="map" class="in-center">
+  <div style="margin-top:75px;padding-top: 75px" id="map">
+    <div class="in-center">
     <ul  v-if="energyData_solar.canton.label === 'canton'">
         <li class="list-region"> <span style="font-weight: 900">Country: </span> {{'Switzerland'}} </li>
         <li class="list-region"><span style="font-weight: 900"> | Hovered Region: </span> {{province.name}} </li>
@@ -247,7 +245,7 @@ export default {
       document.getElementById('chart').style.width = rect_width+"px";
       document.getElementById('chart').style.height = rect_width+"px";
       document.getElementById('main-div').style.maxHeight = rect_height+"px";
-      
+
       const x = d3.scaleLinear()
           .range([delta_width/2, delta_width/2 + width])
           .domain([minX, maxX]);

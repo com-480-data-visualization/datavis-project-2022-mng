@@ -2,8 +2,8 @@
   <div style=" text-align: justify;">
     <div style="margin-top:50px;margin-right: auto;
     margin-left: auto;padding: 50px 15px 75px;max-width: 850px;">
-      <div style="text-align: center; font-style: italic;font-weight: bold">
-        Interactive map of Switzerland</div><br><br>
+      <h1 id="introduction" style="font-size: 50px; text-align: center;color: #3b6b3b">
+        The interactive map of Switzerland</h1><br><br>
       This map is supposed to serve as a visualisation of the current suistanability situation in Switzerland<br><br>
     </div>
   </div>
