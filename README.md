@@ -12,7 +12,7 @@
 [Milestone 2 PDF](Milestone2_DATAVIS.pdf)
 
 ## Milestone 3 (Friday 3 June, 5 pm) 
-[Milestone 2 PDF](Milestone3_DATAVIS.pdf)
+[Milestone 3 PDF](Milestone3_DATAVIS.pdf)
 
 Around the world, countries are trying to reduce their CO2 emissions so that we, future generations and our planet can continue to live and exist without a terrible climate catastrophe. We must make efforts to make our lifestyles, our industries and our society sustainable. This starts with ourselves, our communities, our cantons and our country, Switzerland.
 
