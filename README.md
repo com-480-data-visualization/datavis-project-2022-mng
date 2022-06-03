@@ -10,3 +10,20 @@
 
 ## Milestone 2 (Friday 6 May, 5 pm) 
 [Milestone 2 PDF](Milestone2_DATAVIS.pdf)
+
+## Milestone 3 (Friday 3 June, 5 pm) 
+[Milestone 2 PDF](Milestone3_DATAVIS.pdf)
+
+Around the world, countries are trying to reduce their CO2 emissions so that we, future generations and our planet can continue to live and exist without a terrible climate catastrophe. We must make efforts to make our lifestyles, our industries and our society sustainable. This starts with ourselves, our communities, our cantons and our country, Switzerland.
+
+This website is serves to display the progress of Switzerland, its cantons and communes in 3 key sustainability metrics:
+     
+* Solar potential usage: share of roof area that is economically and technologically exploitable that already has solar pannels installed.
+* Renewable heating share: share of building with renewable heat technologies
+* Electric car share: percentage of electric cars vs combustion cars.
+     
+
+So come take a look and see how your region is doing! Can your region do better? Is your region already a pioneer in sustainable development and an example for the rest of Switzerland?
+
+Maybe you can contibute to the community yourself by switching to an electric car?
+
