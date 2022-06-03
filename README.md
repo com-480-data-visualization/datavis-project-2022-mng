@@ -27,3 +27,18 @@ So come take a look and see how your region is doing! Can your region do better?
 
 Maybe you can contibute to the community yourself by switching to an electric car?
 
+### Technical setup
+The website is hosted [here](https://com-480-data-visualization.github.io/datavis-project-2022-mng/) <br>
+To run the website locally and make possibly changes, please clone the repo and run in order
+1) install dependencies
+```
+npm install
+```
+2) run server locally
+```
+npm run serve
+```
+(Optional) deploy to website (gh-pages)
+```
+npm run deploy
+```
