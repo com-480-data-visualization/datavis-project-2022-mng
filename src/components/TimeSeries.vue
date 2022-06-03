@@ -5,7 +5,7 @@
     </v-col>
     <v-col style="margin-top: 60px">
       <v-row>
-        <v-btn @click="hideAllSeries" block small>Show all</v-btn>
+        <v-btn @click="showAllSeries" block small>Show all</v-btn>
         <v-btn @click="showMainSeries" block small>One per region</v-btn>
       </v-row>
     </v-col>
@@ -13,7 +13,7 @@
 </template>
 <script>
 import VueApexCharts from 'vue-apexcharts'
-import * as d3 from "d3";
+
 export default {
   name: 'TimeSeries',
   components:{
@@ -57,7 +57,7 @@ export default {
           '#FC6F37', '#28FF80','#0800FF',"#BEE7FF",
           "#FEFF0B",'#F44336', '#E91E63', '#9C27B0',
           "#0F750E","#247072","#713D33","#726D30",
-          "#FDA9FE","#65FF07"],
+          "#FDA9FE","#65FF07"], //allowing multiple colors
         stroke: {
           curve: 'straight',
           width:0.8,
@@ -92,24 +92,24 @@ export default {
       },
     }
   },
+  //on mounted, we want to keep only the timeseries for each region
   mounted () {
     const initial_cantons = ["Ticino","Zurich","Vaud"]
     let to_keep = this.dataEnergies.filter(item => !(initial_cantons.includes(item.name))).map(x=>x.name)
     to_keep.forEach((x) => this.$refs.realtimeChart.hideSeries(x))
   },
   methods:{
-    updateSeriesLine(cantons_selected) {
-      var arr_1 = []
-      function myFunction(item) {
-        return arr_1.push({'name': item,"data" : Array.from({length: 8}, () => Math.floor(Math.random() * 100))})
-      }
-      this.$refs.realtimeChart.hideSeries(cantons_selected)
-    },
-    hideAllSeries(){
-      const initial_cantons = ["Ticino","Zurich","Vaud"]
+    /**
+     Function that shows all the time series for each canton
+     */
+    showAllSeries(){
+      console.log("boh")
       let to_keep = this.dataEnergies.map(x=>x.name)
       to_keep.forEach(x=>this.$refs.realtimeChart.showSeries(x))
     },
+    /**
+     Function that hides all the series apart from one for each region (italian, german, french)
+     */
     showMainSeries(){
       const initial_cantons = ["Ticino","Zurich","Vaud"]
       let to_keep = this.dataEnergies.filter(item => !(initial_cantons.includes(item.name))).map(x=>x.name)
@@ -128,8 +128,6 @@ export default {
   text-align: center;
   max-width: 1000px;
   height: 500px;
-
-  /* or whatever width you want. */
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;

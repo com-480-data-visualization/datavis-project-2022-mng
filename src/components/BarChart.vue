@@ -1,16 +1,3 @@
-<!-- <template>
-  <Bar
-      :chart-options="chartOptions"
-      :chart-data="chartData"
-      :chart-id="chartId"
-      :dataset-id-key="datasetIdKey"
-      :plugins="plugins"
-      :css-classes="cssClasses"
-      :styles="styles"
-      :width="width"
-      :height="height"
-  />
-</template> -->
 <template>
   <apexchart ref="realtimeChart" type="bar" :width="width" :height="height" :options="chartOptions" :series="chartData"></apexchart>
 </template>
@@ -57,6 +44,7 @@ export default {
   },
   data(){
     return {
+      //setup of series later needed for the barcharts
       series: [{
             name: this.dataEnergies.country.label,
             data: [this.dataEnergies.country.data === null ? null : this.dataEnergies.country.data[0]*100,
@@ -106,7 +94,7 @@ export default {
               title: {
                 text: 'percentage (%)'
               },
-              
+
               labels: {
                   formatter: function (value) {
                     return value.toFixed(1) + "%";
@@ -125,11 +113,15 @@ export default {
               }
             }
           }
-          
-          
+
+
         }
     },
   methods:{
+    /**
+     function which reformat data according to the injected data received as prop
+     @param data suistanabiltiy indicator data
+     */
     reformatData(data){
       return [{
                 name: this.dataEnergies.country.label,
@@ -146,6 +138,7 @@ export default {
     }
   },
   computed: {
+    //listener on computed
     chartData(){
       return  this.reformatData(this.dataEnergies)
     }

@@ -27,7 +27,7 @@
 </template>
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Introduction',
   props: {
     msg: String
   }

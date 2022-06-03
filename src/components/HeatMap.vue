@@ -23,6 +23,7 @@ export default {
     }
   },
   watch:{
+    //Watch on the selected option form the user, in order to change heatmap depending on the indicator
     selected_option(){
       //remove it and change it
       d3.select("#heatmap").selectAll('*').remove()
@@ -30,6 +31,11 @@ export default {
     }
   },
   methods:{
+    /**
+    create the according heatmap depending on the suistanability indicator
+     * @param selected_option suistanability indicator
+     */
+
     loadHeatmap(selected_option){
       const heatmap_width = 700
       const [minX, minY, maxX, maxY] = bbox(this.cantons);
@@ -48,6 +54,7 @@ export default {
         },
       });
 
+      //crete svg
       const svg = d3.select("#heatmap").append("svg")
           .attr('width',heatmap_width)
           .attr('height',height);
@@ -56,8 +63,10 @@ export default {
       const canton_stroke_width = 0.2
       const canton_stroke = "rgb(0,0,0)"
       const path = d3.geoPath().projection(projection);
+      //select color scale
       var colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
 
+      //filter infos of the according indicator
       let el_cs = null
       if(selected_option === "Electric car"){
         el_cs = this.cantons.features.map(x => x.properties.electric_car_share.split(' '))
@@ -69,12 +78,14 @@ export default {
       else{
         el_cs = this.cantons.features.map(x => x.properties.renewable_heating_share.split(' '))
       }
+      //min-max normalisation
       const values = el_cs.map(x => x[x.length -1])
       const min_val = Math.min.apply(Math, values)
       const max_val = Math.max.apply(Math, values)
+
       colorScale = colorScale.domain([min_val,max_val])
 
-
+      //append data to csv
       svg.append("g")
           .selectAll("path")
           .data(this.cantons.features)
@@ -85,6 +96,7 @@ export default {
           .attr("stroke", canton_stroke)
           .attr("d", path)
           .attr("fill", function (d) {
+            //for each canton, get its suinstability indicator
             var energy_array = []
             if(selected_option === "Electric car"){
               energy_array = d.properties.electric_car_share.split(" ")
@@ -96,10 +108,11 @@ export default {
             else{
               energy_array = d.properties.renewable_heating_share.split(" ")
             }
+            //get the most recent value for the indicator
             var energy_recent_value = parseFloat(energy_array[energy_array.length - 1])
-            console.log(d.properties.solar_potential_usage.split(" ").length)
             return colorScale(energy_recent_value);
           })
+      //append abbreviation of cantons as text in the middle of each canton
       svg.append("g")
           .selectAll("text")
           .data(this.cantons.features)
@@ -117,7 +130,7 @@ export default {
             return d.properties.abbreviation;
           });
 
-      // Legend
+      // append legend
       var g = svg.append("g")
           .attr("class", "legendThreshold")
           .attr("transform", "translate(20,70)");
@@ -126,9 +139,10 @@ export default {
           .attr("x", 0)
           .attr("y", -10)
           .text("%");
-      var labels = ['Worst', '1-5', '6-10', 'boh','Best'];
+      var labels = ['Worst', 'na', 'na', 'na','Best'];
       var legend = legendColor()
           .labels(function (d) {
+            //we only display the worst and best color
             if(labels[0] === labels[d.i] || labels[labels.length - 1] === labels[d.i]){
               return labels[d.i]
             }})
@@ -139,6 +153,7 @@ export default {
           .call(legend);
     }
   },
+  //on mount of the component we want to load the default heatmap
   mounted(){
     this.loadHeatmap(this.selected_option);
 
@@ -153,8 +168,8 @@ export default {
   justify-content: center;
   align-items: flex-start;
   text-align: center;
-  max-width: 1000px; /* or whatever width you want. */
-  max-height: 700px; /* or whatever width you want. */
+  max-width: 1000px;
+  max-height: 700px;
   margin-bottom: 100px;
   margin-left: auto;
   margin-right: auto;

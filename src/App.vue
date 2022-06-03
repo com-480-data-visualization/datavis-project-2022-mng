@@ -1,5 +1,6 @@
 <template>
   <v-app id="app">
+    <!--header-->
     <div class="header">
       <div class="topnav">
         <div class="topnav-right">
@@ -9,8 +10,8 @@
           <a href="#heatmaps" onmouseover="this.style.color='#3b6b3b';" onmouseout="this.style.color='grey'" style="font-weight:500;color:grey;text-transform: uppercase">Heatmap</a>
         </div>
       </div>
-    </div>
-    <HelloWorld/>
+    </div> <!--finished header-->
+    <Introduction/>
     <Map/>
     <div id="timeseries" style="margin-right: auto; margin-left: auto; padding: 80px 15px 75px; max-width: 850px;">
       <h2>Timeseries data</h2><br>
@@ -59,7 +60,7 @@
         <v-divider></v-divider>
 
         <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} — <strong>Data visualization - EPFL</strong><v-btn class="white--text" icon href="https://github.com/epfl-ada/ada-2021-project-mmng"><v-icon size="24px">mdi-github</v-icon></v-btn>
+          {{ new Date().getFullYear() }} — <strong>Data visualization - EPFL</strong><v-btn class="white--text" icon href="https://github.com/com-480-data-visualization/datavis-project-2022-mng"><v-icon size="24px">mdi-github</v-icon></v-btn>
         </v-card-text>
       </v-card>
     </v-footer>
@@ -67,20 +68,19 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Introduction from './components/Introduction.vue'
 import Map from "./components/Map.vue";
 import HeatMap from "./components/HeatMap";
 import TimeSeries from "./components/TimeSeries";
 import json from './data/cantons.topo.json';
 import * as topojson from "topojson-client";
-//import * as d3 from 'd3'
 
 export default {
   name: 'App',
   components: {
     TimeSeries,
     HeatMap,
-    HelloWorld,Map
+    Introduction,Map
   },
   data(){
     return{
@@ -92,12 +92,17 @@ export default {
     }
   },
   created() {
+    //prepare data to be injected in TimeSeries
     this.energyData_car = this.createData("electric_car_share")
     this.energyData_solar = this.createData("solar_potential_usage")
     this.energyData_heating = this.createData("renewable_heating_share")
   },
   methods:{
-
+    /**
+     creates the data for a given metric (later used in Timeseries)
+     * @param which_energy suistanability indicator
+     * @return array with info of indicator
+     */
     createData(which_energy){
       var arr_to_pass = []
       this.timeSeriesValues.features.forEach((item) =>
@@ -125,34 +130,6 @@ export default {
   top: 0;
   z-index: 1;
   width: 100%;
-}
-.progress-container {
-  width: 100%;
-  height: 8px;
-  background: #ccc;
-}
-.progress-bar {
-  height: 6px;
-  background: #31502c;
-  width: 0%;
-}
-.container {
-  position: relative;
-  text-align: center;
-  color: #31502c;
-  margin-bottom: 300px;
-}
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display:inline;
-}
-.first-letter {
-  font-size: 100px;
-  line-height: 70px;
-  font-weight: bold;
 }
 .topnav {
   overflow: hidden;

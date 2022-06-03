@@ -43,12 +43,10 @@ import bbox from "@turf/bbox";
 import * as d3 from 'd3'
 import json from '../data/cantons.topo.json';
 import json2 from '../data/communes.topo.json';
-import Pie from "./Pie";
 import BarChart from "./BarChart";
 import mapHelpers from "../helpers/map_helpers";
-
-//import * as topojson from 'topojson-server';
 import * as topojson from "topojson-client";
+
 export default {
   name: "Map",
   components: {BarChart},
@@ -446,8 +444,6 @@ export default {
   width: 1400px;
   height: 1000px;
   max-width: 2000px;
-
- /* or whatever width you want. */
   margin-left: auto;
   margin-right: auto;
   overflow: hidden;
@@ -459,7 +455,6 @@ export default {
   align-items: flex-start;
   width: 1400px;
   height: 30px;
- /* or whatever width you want. */
   margin-left: auto;
   margin-right: auto;
 
